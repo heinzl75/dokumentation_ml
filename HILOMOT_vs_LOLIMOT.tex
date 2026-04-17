@@ -1,0 +1,193 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyvrb}
+\usepackage{mdframed}
+\usepackage{parskip}
+
+\geometry{margin=2.5cm}
+
+\title{\textbf{HILOMOT -- Einführung, Motivation und Ansatz}\\\large Eine Lernunterlage für die Hochschule}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+%------------------------------------------------------------------
+\section{Ausgangsproblem: Warum brauchen wir lokale Modelle?}
+
+In der Praxis begegnen uns ständig \textbf{nichtlineare Systeme} -- ob Verbrennungsmotoren, chemische Reaktoren oder Roboterkinematiken. Ein einfaches lineares Modell $y = a \cdot x + b$ kann solche Zusammenhänge nicht beschreiben.
+
+\textbf{Idee:} Statt ein einziges kompliziertes nichtlineares Modell zu bauen, zerlegen wir das Problem in \textbf{viele kleine Teilprobleme}, die jeweils einfach (linear) lösbar sind.
+
+\begin{mdframed}
+\textbf{Analogie:} Stell dir eine Landkarte vor. Statt die gesamte Erdoberfläche mit einer einzigen Formel zu beschreiben, verwenden wir viele kleine, flache Kartenblätter. Jedes Blatt ist für sich genommen einfach (flach/linear), aber zusammen beschreiben sie die gekrümmte Oberfläche beliebig genau.
+\end{mdframed}
+
+Das führt uns zum Konzept der \textbf{lokalen Modellnetze:}
+
+\begin{equation}
+\hat{y}(x) = \sum_{i=1}^{M} \Phi_i(x) \cdot \hat{y}_i(x)
+\end{equation}
+
+\begin{itemize}
+  \item $\hat{y}_i(x)$: ein einfaches lineares Modell, das in einer bestimmten Region \glqq zuständig\grqq{} ist
+  \item $\Phi_i(x)$: eine Gewichtungsfunktion, die angibt, \textbf{wie stark} Modell~$i$ an der Stelle~$x$ beiträgt
+  \item Es gilt immer: $\sum_i \Phi_i(x) = 1$ -- die Gewichte summieren sich zu~1 (Partition der Eins)
+\end{itemize}
+
+Die zentrale Frage ist nun: \textbf{Wie teilen wir den Eingangsraum sinnvoll auf?}
+
+%------------------------------------------------------------------
+\section{LOLIMOT -- Der bewährte Ansatz}
+
+LOLIMOT (\textit{Local Linear Model Tree}) beantwortet diese Frage mit einer einfachen Strategie:
+
+\textbf{Schneide den Raum immer entlang einer Achse durch.}
+
+Das bedeutet: Jeder Split teilt eine Region in zwei Hälften -- immer parallel zu einer Koordinatenachse. Wie beim Schneiden eines Kuchens, aber nur gerade Schnitte, immer horizontal oder vertikal.
+
+\subsection{Vorgehen (vereinfacht)}
+\begin{enumerate}
+  \item Starte mit einem einzigen Modell für den ganzen Raum
+  \item Finde die Region mit dem größten Fehler
+  \item Teile sie in der Mitte -- probiere jede Achse durch, nimm den besten Schnitt
+  \item Trainiere die lokalen Modelle neu
+  \item Wiederhole, bis der Fehler klein genug ist
+\end{enumerate}
+
+\textbf{Stärken:} Einfach, schnell, robust, gut verstanden.
+
+\textbf{Aber:} Was passiert, wenn die \glqq wahre\grqq{} Grenze zwischen zwei Verhaltensbereichen \textbf{schräg} verläuft?
+
+\begin{mdframed}
+\textbf{Beispiel:} Ein Motor verhält sich unterschiedlich je nach Kombination von Drehzahl und Last. Die Grenze zwischen \glqq magerem\grqq{} und \glqq fettem\grqq{} Betrieb verläuft diagonal im Drehzahl-Last-Kennfeld. LOLIMOT muss diese diagonale Grenze durch viele kleine Treppenstufen (achsenparallele Schnitte) annähern -- das kostet \textbf{unnötig viele Teilmodelle}.
+\end{mdframed}
+
+%------------------------------------------------------------------
+\section{HILOMOT -- Die Weiterentwicklung}
+
+\subsection{Kernidee: Schräg schneiden dürfen}
+
+\textbf{HILOMOT} (\textit{Hierarchical Local Model Tree}) löst genau dieses Problem. Statt nur achsenparallel zu schneiden, darf die Trennlinie \textbf{beliebig orientiert} sein:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+ & \textbf{LOLIMOT} & \textbf{HILOMOT} \\
+\midrule
+\textbf{Schnittrichtung} & Nur entlang der Achsen & Beliebig orientiert (schräg) \\
+\textbf{Trennfläche} & $x_j = \text{const}$ & $w^\top x + b = 0$ (Hyperebene) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{mdframed}
+\textbf{Analogie:} LOLIMOT schneidet den Kuchen nur waagrecht oder senkrecht. HILOMOT darf auch diagonal schneiden -- und trifft damit die natürliche Form des Kuchens oft viel besser.
+\end{mdframed}
+
+\subsection{Der Baum als Organisationsstruktur}
+
+HILOMOT organisiert die Aufteilung als \textbf{Binärbaum:}
+
+\begin{Verbatim}[frame=single]
+            [Wurzel-Gate]
+           /             \\
+     [Gate]              Modell 3
+     /    \\
+Modell 1   Modell 2
+\end{Verbatim}
+
+\begin{itemize}
+  \item \textbf{Innere Knoten} = Entscheidungen: \glqq Gehört der Punkt eher links oder rechts?\grqq
+  \item \textbf{Blätter} = Lokale lineare Modelle
+\end{itemize}
+
+An jedem inneren Knoten sitzt eine \textbf{weiche Entscheidungsfunktion} (Sigmoid/Logistik):
+
+\begin{equation}
+g(x) = \frac{1}{1 + e^{-(w^\top x + b)}}
+\end{equation}
+
+Diese Funktion gibt einen Wert zwischen 0 und 1 aus:
+\begin{itemize}
+  \item Nahe 1 $\rightarrow$ der Punkt gehört \glqq eher links\grqq
+  \item Nahe 0 $\rightarrow$ der Punkt gehört \glqq eher rechts\grqq
+  \item Genau 0{,}5 $\rightarrow$ der Punkt liegt auf der Trennfläche
+\end{itemize}
+
+\textbf{Wichtig:} Der Übergang ist \textbf{weich/glatt}, nicht hart. Es gibt keinen abrupten Sprung an der Grenze -- das sorgt für ein glattes Gesamtmodell.
+
+\subsection{Wie entsteht das Gesamtgewicht eines Blattes?}
+
+Das Gewicht eines Blattes ergibt sich aus dem \textbf{Produkt aller Entscheidungen auf dem Weg von der Wurzel zum Blatt:}
+
+\begin{mdframed}
+Für Modell~1 im Beispielbaum oben:
+\begin{itemize}
+  \item An der Wurzel: \glqq nach links\grqq{} $\rightarrow$ Gewicht $g_{\text{Wurzel}}(x)$
+  \item Am zweiten Knoten: \glqq nach links\grqq{} $\rightarrow$ Gewicht $g_{\text{Knoten}}(x)$
+  \item Gesamt: $\Phi_1(x) = g_{\text{Wurzel}}(x) \cdot g_{\text{Knoten}}(x)$
+\end{itemize}
+\end{mdframed}
+
+Dieses Pfadprodukt garantiert automatisch, dass sich alle Blattgewichte zu~1 summieren.
+
+\subsection{Wie wird HILOMOT trainiert?}
+
+Das Training folgt dem gleichen \textbf{Wachstumsprinzip} wie LOLIMOT:
+
+\begin{enumerate}
+  \item \textbf{Starte einfach:} Ein einziges lineares Modell für alle Daten
+  \item \textbf{Finde das schwächste Blatt:} Wo ist der Fehler am größten?
+  \item \textbf{Spalte es auf:} Ersetze das Blatt durch einen neuen Knoten mit zwei Kindern
+  \item \textbf{Optimiere die Trennfläche:} Finde die beste Orientierung $(w, b)$ des Schnitts -- hier liegt der Unterschied zu LOLIMOT:
+  \begin{itemize}
+    \item LOLIMOT: Probiere $p$~Achsen durch (diskret, einfach)
+    \item HILOMOT: Optimiere Richtung und Position kontinuierlich (z.\,B. Gradientenabstieg)
+  \end{itemize}
+  \item \textbf{Trainiere die lokalen Modelle} (gewichtete kleinste Quadrate)
+  \item \textbf{Wiederhole} bis der Fehler akzeptabel ist
+\end{enumerate}
+
+%------------------------------------------------------------------
+\section{Gegenüberstellung: Wann nehme ich was?}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Aspekt} & \textbf{LOLIMOT} & \textbf{HILOMOT} \\
+\midrule
+Schnitte & Achsenparallel & Beliebig orientiert \\
+Anzahl Modelle & Tendenziell mehr & Oft weniger nötig \\
+Training & Schnell, einfach & Aufwendiger \\
+Robustheit & Sehr robust & Empfindlicher \\
+Interpretierbarkeit & Rechtecke leicht vorstellbar & Schräge Regionen abstrakter \\
+Gut geeignet für & Achsennahe Trennungen & Gekoppelte Eingänge \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{mdframed}
+\textbf{Merksatz:} HILOMOT enthält LOLIMOT als Spezialfall. Wenn man die Trennrichtung~$w$ auf Einheitsvektoren~$e_j$ einschränkt, wird jeder HILOMOT-Split zu einem LOLIMOT-Split.
+\end{mdframed}
+
+%------------------------------------------------------------------
+\section{Zusammenfassung}
+
+\textbf{Beide Verfahren} erzeugen glatte, interpretierbare Modelle aus lokalen linearen Bausteinen. Die Wahl hängt vom konkreten Problem ab:
+
+\begin{itemize}
+  \item Wenn die Daten nahelegen, dass die Grenzen zwischen Betriebsbereichen \textbf{schräg} verlaufen, lohnt sich der Mehraufwand von \textbf{HILOMOT}.
+  \item Für einen schnellen ersten Ansatz ist \textbf{LOLIMOT} oft die bessere Wahl.
+\end{itemize}
+
+\end{document}
