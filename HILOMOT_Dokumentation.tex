@@ -1,0 +1,872 @@
+\documentclass[12pt,a4paper]{article}
+
+% ============================================================
+% PAKETE
+% ============================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{microtype}
+\usepackage{lmodern}
+\usepackage{setspace}
+
+% ============================================================
+% LAYOUT
+% ============================================================
+\geometry{
+  a4paper,
+  top=2.5cm, bottom=2.5cm,
+  left=2.5cm, right=2.5cm
+}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+
+% ============================================================
+% FARBEN & BOXEN
+% ============================================================
+\definecolor{boxblue}{RGB}{220,235,250}
+\definecolor{boxgreen}{RGB}{220,245,220}
+\definecolor{codegray}{RGB}{245,245,245}
+\definecolor{codegreen}{rgb}{0,0.5,0}
+\definecolor{codepurple}{rgb}{0.5,0,0.5}
+
+\tcbuselibrary{skins, breakable}
+
+\newtcolorbox{analogiebox}[1][]{{
+  colback=boxblue, colframe=blue!50!black,
+  title=Analogie, fonttitle=\bfseries,
+  breakable, #1
+}}
+\newtcolorbox{merkbox}[1][]{{
+  colback=boxgreen, colframe=green!40!black,
+  title=Merksatz, fonttitle=\bfseries,
+  breakable, #1
+}}
+\newtcolorbox{hinweisbox}[1][]{{
+  colback=yellow!15, colframe=orange!70!black,
+  title=Hinweis, fonttitle=\bfseries,
+  breakable, #1
+}}
+
+% ============================================================
+% LISTINGS (Code)
+% ============================================================
+\lstset{
+  backgroundcolor=\color{codegray},
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{codegreen},
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{codepurple},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  frame=single,
+  rulecolor=\color{gray!40},
+  tabsize=4,
+  showstringspaces=false,
+  literate={ä}{{\"{a}}}1 {ö}{{\"{o}}}1 {ü}{{\"{u}}}1
+           {Ä}{{\"{A}}}1 {Ö}{{\"{O}}}1 {Ü}{{\"{U}}}1
+           {ß}{{\ss{}}}1
+}
+
+% ============================================================
+% HYPERREF
+% ============================================================
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  urlcolor=blue!60!black,
+  citecolor=blue!60!black,
+  pdftitle={HILOMOT -- Methode und Tool-Dokumentation},
+  pdfauthor={heinzl75},
+  pdfsubject={Lokale Modellnetze, HILOMOT, LOLIMOT}
+}
+
+% ============================================================
+% DOKUMENT
+% ============================================================
+\begin{document}
+
+% ---- Titelseite ----
+\begin{titlepage}
+  \centering
+  \vspace*{3cm}
+  {\Huge\bfseries HILOMOT}\[0.5em]
+  {\Large Methode, Vergleich und Tool-Dokumentation}\[1.5em]
+  {\large Eine Lernunterlage f\"ur Hochschule und Praxis}\[3em]
+  \rule{0.6\textwidth}{0.4pt}\[1.5em]
+  {\normalsize Python-Portierung der MATLAB LMNTool-Toolbox (v1.5.2.1)}\[0.5em]
+  {\normalsize Stand: April 2026}\[3em]
+  \vfill
+  {\small \textit{Hierarchical Local Model Tree -- Lokale Modellnetze mit obliquen Trennhyperebenen}}
+\end{titlepage}
+
+% ---- Inhaltsverzeichnis ----
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Einf"uhrung und Motivation}
+% ============================================================
+
+\textbf{HILOMOT} (\textit{Hierarchical Local Model Tree}) ist ein Algorithmus zum Aufbau lokaler Modellnetze (LMN). Er partitioniert den Eingangsraum schrittweise durch bin"are Splits und passt in jeder Region ein lineares Modell an.
+
+In der Praxis begegnen uns st"andig \textbf{nichtlineare Systeme} -- ob Verbrennungsmotoren, chemische Reaktoren oder Roboterkinematiken. Ein einfaches lineares Modell $y = a \cdot x + b$ kann solche Zusammenh"ange nicht ausreichend beschreiben.
+
+\textbf{Grundidee:} Statt ein einziges kompliziertes nichtlineares Modell zu bauen, zerlegen wir das Problem in \textbf{viele kleine Teilprobleme}, die jeweils einfach (linear) l"osbar sind.
+
+\begin{analogiebox}
+Stell dir eine Landkarte vor. Statt die gesamte Erdoberfl"ache mit einer einzigen Formel zu beschreiben, verwenden wir viele kleine, flache Kartenbla"tter. Jedes Blatt ist f"ur sich genommen einfach (flach/linear), aber zusammen beschreiben sie die gekr"ummte Oberfl"ache beliebig genau.
+\end{analogiebox}
+
+Im Gegensatz zum Vorg"anger \textbf{LOLIMOT} verwendet HILOMOT \textbf{oblique} (schr"age) Trennhyperebenen, die nicht auf die Koordinatenachsen beschr"ankt sind. Damit kann das Modell auch diagonale und nichtachsenparallele Strukturen in den Daten effizient erfassen.
+
+Dieses Python-Tool ist eine Portierung der MATLAB LMNTool-Toolbox (Version 1.5.2.1) und stellt sowohl eine interaktive GUI als auch eine skriptbasierte Schnittstelle bereit.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{hilomot_3d_partition_comparison.png}
+  \caption{Typische Ausgabe des Python-Tools mit modellierter 3D-Ergebnisfl"ache und zugeh"orig em Partitionierungsplot.}
+  \label{fig:intro}
+\end{figure}
+
+% ============================================================
+\section{Theoretische Grundlagen}
+% ============================================================
+
+\subsection{Ausgangsproblem: Warum lokale Modelle?}
+
+Die zentrale Frage beim Aufbau eines lokalen Modellnetzes ist: \textbf{Wie teilen wir den Eingangsraum sinnvoll auf?}
+
+Das f"uhrt uns zum Konzept der \textbf{lokalen Modellnetze:}
+
+\begin{equation}
+  \hat{y}(x) = \sum_{i=1}^{M} \Phi_i(x) \cdot \hat{y}_i(x)
+\end{equation}
+
+\begin{itemize}
+  \item $\hat{y}_i(x)$: ein einfaches lineares Modell, das in einer bestimmten Region \glqq zust"andig\grqq{} ist
+  \item $\Phi_i(x)$: eine Gewichtungsfunktion, die angibt, \textbf{wie stark} Modell $i$ an der Stelle $x$ beitr"agt
+  \item Es gilt immer: $\sum_i \Phi_i(x) = 1$ -- die Gewichte summieren sich zu~1 (\textit{Partition of Unity})
+\end{itemize}
+
+% ----------------------------------------
+\subsection{Lokale Modellnetze (LMN)}
+% ----------------------------------------
+
+Ein lokales Modellnetz approximiert eine nichtlineare Funktion $f: \mathbb{R}^n \rightarrow \mathbb{R}$ durch eine gewichtete Summe lokaler Modelle:
+
+\begin{equation}
+  \hat{y}(\mathbf{x}) = \sum_{i=1}^{M} \Phi_i(\mathbf{z}) \cdot \hat{y}_i(\mathbf{x})
+\end{equation}
+
+wobei:
+\begin{itemize}
+  \item $M$ die Anzahl der lokalen Modelle (Bl"atter) ist,
+  \item $\hat{y}_i(\mathbf{x}) = \boldsymbol{\theta}_i^T \tilde{\mathbf{x}}$ das $i$-te lokale lineare Modell,
+  \item $\tilde{\mathbf{x}} = [1, x_1, \ldots, x_n]^T$ der erweiterte Regressionsvektor,
+  \item $\Phi_i(\mathbf{z})$ die G"ultigkeitsfunktion des $i$-ten Modells ist.
+\end{itemize}
+
+Die G"ultigkeitsfunktionen erf"ullen zu jedem Zeitpunkt die \textbf{Partition-of-Unity-Bedingung}:
+
+\begin{equation}
+  \sum_{i=1}^{M} \Phi_i(\mathbf{z}) = 1 \quad \text{f"ur alle } \mathbf{z}
+\end{equation}
+
+Der Eingangsvektor der G"ultigkeitsfunktionen $\mathbf{z}$ kann identisch mit $\mathbf{x}$ sein oder davon abweichen (z.\,B. bei zeitverz"ogerten Systemen).
+
+% ----------------------------------------
+\subsection{G"ultigkeitsfunktionen und Sigmoid-Splits}
+% ----------------------------------------
+
+Die G"ultigkeitsfunktionen werden durch einen \textbf{bin"aren Baum} aufgebaut. An jedem inneren Knoten des Baums wird der Raum durch eine Sigmoid-Funktion aufgeteilt:
+
+\begin{equation}
+  \Psi(\mathbf{z}) = \sigma\left(-\frac{\kappa}{\rho} \cdot (\mathbf{w}^T \mathbf{z} + b)\right),
+  \qquad \sigma(x) = \frac{1}{1+e^{-x}}
+\end{equation}
+
+wobei:
+\begin{itemize}
+  \item $\mathbf{w}$ der Normalenvektor der Trennhyperebene,
+  \item $b$ der Bias (Verschiebungsterm),
+  \item $\kappa$ der \textbf{Sch"arfeparameter} (kontrolliert die Steilheit der Sigmoid-Funktion),
+  \item $\rho$ der \textbf{Gl"attigkeitsparameter} (\texttt{smoothness}, kontrolliert die "Uberlappung der Regionen).
+\end{itemize}
+
+Diese Funktion gibt einen Wert zwischen 0 und~1 aus:
+\begin{itemize}
+  \item Nahe~1 $\Rightarrow$ der Punkt geh"ort \glqq eher links\grqq{}
+  \item Nahe~0 $\Rightarrow$ der Punkt geh"ort \glqq eher rechts\grqq{}
+  \item Genau~0{,}5 $\Rightarrow$ der Punkt liegt auf der Trennfl"ache
+\end{itemize}
+
+\begin{hinweisbox}
+Der "Ubergang ist \textbf{weich/glatt}, nicht hart. Es gibt keinen abrupten Sprung an der Grenze -- das sorgt f"ur ein glattes Gesamtmodell.
+\end{hinweisbox}
+
+Die G"ultigkeit eines Blattknotens ergibt sich durch das Produkt der Sigmoid-Werte entlang des Pfades von der Wurzel zum Blatt:
+
+\begin{equation}
+  \Phi_i(\mathbf{z}) = \prod_{k \in \mathrm{Pfad}(i)} \Psi_k(\mathbf{z})
+  \quad \text{(linkes Kind)}
+\end{equation}
+\begin{equation}
+  \Phi_i(\mathbf{z}) = \prod_{k \in \mathrm{Pfad}(i)} \bigl(1 - \Psi_k(\mathbf{z})\bigr)
+  \quad \text{(rechtes Kind)}
+\end{equation}
+
+% ----------------------------------------
+\subsection{LOLIMOT -- Achsenparallele Splits}
+% ----------------------------------------
+
+\textbf{LOLIMOT} (\textit{Local Linear Model Tree}) ist der Vorg"anger von HILOMOT und beantwortet die Partitionierungsfrage mit einer einfachen Strategie: \textbf{Schneide den Raum immer entlang einer Achse durch.}
+
+Jeder Split erfolgt achsenparallel:
+
+\begin{equation}
+  \mathbf{w} = \mathbf{e}_d, \qquad b = -c_d
+\end{equation}
+
+wobei $\mathbf{e}_d$ der $d$-te Einheitsvektor ist. Dies entspricht einer Aufteilung entlang einer Koordinatenachse bei Schwellenwert~$c_d$.
+
+\textbf{Vorgehen (vereinfacht):}
+\begin{enumerate}
+  \item Starte mit einem einzigen Modell f"ur den ganzen Raum
+  \item Finde die Region mit dem gr"o\ss{}ten Fehler
+  \item Teile sie in der Mitte -- probiere jede Achse durch, nimm den besten Schnitt
+  \item Trainiere die lokalen Modelle neu
+  \item Wiederhole, bis der Fehler klein genug ist
+\end{enumerate}
+
+\textbf{St"arken:} Einfach, schnell, robust, gut verstanden.
+
+\begin{hinweisbox}
+\textbf{Aber:} Was passiert, wenn die \glqq wahre\grqq{} Grenze zwischen zwei Verhaltensbereichen \textbf{schr"ag} verl"auft?
+
+Beispiel: Ein Motor verh"alt sich unterschiedlich je nach Kombination von Drehzahl und Last. Die Grenze zwischen \glqq magerem\grqq{} und \glqq fettem\grqq{} Betrieb verl"auft diagonal im Drehzahl-Last-Kennfeld. LOLIMOT muss diese diagonale Grenze durch viele kleine Treppenstufen ann"ahern -- das kostet \textbf{unn"otig viele Teilmodelle}.
+\end{hinweisbox}
+
+% ----------------------------------------
+\subsection{HILOMOT -- Oblique Splits}
+% ----------------------------------------
+
+HILOMOT erweitert LOLIMOT durch \textbf{oblique} (schr"age) Trennhyperebenen. Statt nur achsenparallel zu schneiden, darf die Trennlinie \textbf{beliebig orientiert} sein:
+
+\begin{equation}
+  \mathbf{w}^T \mathbf{z} + b = 0 \qquad \text{(allgemeine Hyperebene)}
+\end{equation}
+
+\begin{center}
+\begin{tabular}{lll}
+  \toprule
+  & \textbf{LOLIMOT} & \textbf{HILOMOT} \\  \midrule
+  Schnittrichtung & Nur entlang der Achsen & Beliebig orientiert (schr"ag) \\
+  Trennfl"ache & $x_j = \mathrm{const}$ & $\mathbf{w}^\top \mathbf{x} + b = 0$ \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{analogiebox}
+LOLIMOT schneidet den Kuchen nur waagrecht oder senkrecht. HILOMOT darf auch diagonal schneiden -- und trifft damit die nat"urliche Form des Kuchens oft viel besser.
+\end{analogiebox}
+
+\textbf{Split-Kandidaten} werden in dieser Implementierung generiert durch:
+\begin{enumerate}
+  \item Alle achsenparallelen Richtungen $\mathbf{e}_1, \ldots, \mathbf{e}_n$ (wie LOLIMOT),
+  \item Falls \texttt{oblique=True}: zus"atzlich die Hauptachsenrichtung der gewichteten Kovarianzmatrix der Daten im schlechtesten Blatt (PCA-Richtung).
+\end{enumerate}
+
+Zus"atzlich wird bei 2D-Eingaben eine \textbf{kontinuierliche Optimierung} der Split-Richtung durchgef"uhrt: Der Winkel~$\theta$ wird so gew"ahlt, dass der globale Trainingsfehler minimiert wird:
+
+\begin{equation}
+  \theta^* = \arg\min_\theta \mathrm{MSE}\left(\mathbf{y},\, \hat{\mathbf{y}}(\theta)\right),
+  \qquad \mathbf{w}(\theta) = [\cos\theta,\, \sin\theta]^T
+\end{equation}
+
+\begin{merkbox}
+HILOMOT enth"alt LOLIMOT als Spezialfall. Wenn man die Trennrichtung $\mathbf{w}$ auf Einheitsvektoren $\mathbf{e}_j$ einschr"ankt, wird jeder HILOMOT-Split zu einem LOLIMOT-Split.
+\end{merkbox}
+
+% ----------------------------------------
+\subsection{Der Baum als Organisationsstruktur}
+% ----------------------------------------
+
+HILOMOT organisiert die Aufteilung als \textbf{Bin"arbaum:}
+
+\begin{lstlisting}[caption={Beispielbaum mit zwei Gate-Knoten und drei Bl"attern},language={}
+]
+            [Wurzel-Gate]
+           /             \\
+     [Gate]              Modell 3
+     /    \\
+Modell 1   Modell 2
+\end{lstlisting}
+
+\begin{itemize}
+  \item \textbf{Innere Knoten} = Entscheidungen (Gates): \glqq Geh"ort der Punkt eher links oder rechts?\grqq{}
+  \item \textbf{Bl"atter} = Lokale lineare Modelle
+\end{itemize}
+
+An jedem inneren Knoten sitzt eine \textbf{weiche Entscheidungsfunktion} (Sigmoid):
+
+\begin{equation}
+  g(\mathbf{x}) = \frac{1}{1 + e^{-(\mathbf{w}^T \mathbf{x} + b)}}
+\end{equation}
+
+Das Gewicht eines Blattes ergibt sich aus dem \textbf{Produkt aller Entscheidungen auf dem Weg von der Wurzel zum Blatt.} F"ur Modell~1 im Beispielbaum oben:
+\begin{itemize}
+  \item An der Wurzel: \glqq nach links\grqq{} $\Rightarrow$ Gewicht $g_{\mathrm{Wurzel}}(\mathbf{x})$
+  \item Am zweiten Knoten: \glqq nach links\grqq{} $\Rightarrow$ Gewicht $g_{\mathrm{Knoten}}(\mathbf{x})$
+  \item Gesamt: $\Phi_1(\mathbf{x}) = g_{\mathrm{Wurzel}}(\mathbf{x}) \cdot g_{\mathrm{Knoten}}(\mathbf{x})$
+\end{itemize}
+
+Dieses Pfadprodukt garantiert automatisch, dass sich alle Blattgewichte zu~1 summieren.
+
+% ----------------------------------------
+\subsection{Kappa-Anpassung (\texttt{demanded\_membership\_value})}
+% ----------------------------------------
+
+Der Sch"arfeparameter $\kappa$ beeinflusst, wie stark sich die Regionen "uberlappen. Ein hoher Wert erzeugt scharfe, nahezu unstetige "Uberg"ange; ein niedriger Wert erzeugt weiche, breite "Uberg"ange.
+
+Die Kappa-Anpassung basiert auf dem \textbf{demanded membership value} $\mu^*$ (Standard: 0{,}8). $\kappa$ wird so gew"ahlt, dass Datenpunkte in der Mitte ihrer Region mindestens die G"ultigkeitsfunktion~$\mu^*$ erreichen:
+
+\begin{equation}
+  \kappa = \left|\frac{\rho \cdot \ln\left(\dfrac{1}{\mu^*} - 1\right)}{\mathbf{w}^T \mathbf{z}_{\min} + b}\right|
+\end{equation}
+
+wobei $\mathbf{z}_{\min}$ derjenige Datenpunkt ist, der der Trennhyperebene am n"achsten liegt.
+
+% ----------------------------------------
+\subsection{Gewichtete kleinste Quadrate (WLS)}
+% ----------------------------------------
+
+Die Parameter $\boldsymbol{\theta}_i$ jedes lokalen Modells werden durch \textbf{gewichtete kleinste Quadrate} (WLS) gesch"atzt:
+
+\begin{equation}
+  \boldsymbol{\theta}_i = \arg\min_{\boldsymbol{\theta}} \sum_{k=1}^{N} \Phi_i(\mathbf{z}_k) \cdot \left(y_k - \boldsymbol{\theta}^T \tilde{\mathbf{x}}_k\right)^2
+\end{equation}
+
+Dies entspricht dem Standard-Least-Squares-Problem mit gewichteter Datenmatrix:
+
+\begin{equation}
+  \boldsymbol{\theta}_i = \left(\tilde{\mathbf{X}}^T \mathbf{W}_i \tilde{\mathbf{X}}\right)^{-1} \tilde{\mathbf{X}}^T \mathbf{W}_i \mathbf{y}
+\end{equation}
+
+wobei $\mathbf{W}_i = \mathrm{diag}(\Phi_i(\mathbf{z}_1), \ldots, \Phi_i(\mathbf{z}_N))$.
+
+In der Implementierung wird \texttt{np.linalg.lstsq} auf die gewichtete Matrix $\mathbf{W}_i^{1/2} \tilde{\mathbf{X}}$ angewendet (numerisch stabiler).
+
+% ----------------------------------------
+\subsection{Lernalgorithmus -- Baumwachstum}
+% ----------------------------------------
+
+Der HILOMOT-Algorithmus w"achst den Baum iterativ:
+
+\begin{lstlisting}[caption={HILOMOT-Lernalgorithmus (Pseudocode)},language={}
+]
+1. Starte mit einem einzigen Blatt (globales lineares Modell)
+2. Wiederhole bis max_leafs erreicht:
+   a. Bestimme das "schlechteste" Blatt
+      (hoechster gewichteter Trainingsfehler)
+   b. Generiere Split-Kandidaten fuer dieses Blatt
+   c. Evaluiere jeden Kandidaten:
+      - Schaetze kappa
+      - Berechne phi_left und phi_right
+      - Passe lokale Modelle per WLS an
+      - Berechne resultierenden Gesamtfehler
+   d. Fuehre den besten Split durch (falls verbessernd)
+   e. Falls kein Split den Fehler verbessert: Abbruch
+\end{lstlisting}
+
+Das schlechteste Blatt wird bestimmt durch:
+
+\begin{equation}
+  i^* = \arg\max_i \sum_{k=1}^{N} \Phi_i(\mathbf{z}_k) \cdot \left(y_k - \hat{y}_i(\mathbf{x}_k)\right)^2
+\end{equation}
+
+% ----------------------------------------
+\subsection{Detaillierter Partitionierungsprozess}
+% ----------------------------------------
+
+\subsubsection*{1.~Bestimmung der aktiven Region}
+
+Nach jeder Iteration werden f"ur alle Trainingspunkte die Blatt-G"ultigkeiten berechnet:
+
+\begin{equation}
+  \boldsymbol{\Phi}_i = [\Phi_i(\mathbf{z}_1), \ldots, \Phi_i(\mathbf{z}_N)]^T
+\end{equation}
+
+Dieser Vektor wirkt als \textbf{weiche Zuordnung} der Datenpunkte zu diesem Blatt.
+
+\subsubsection*{2.~Wahl des zu teilenden Blattes}
+
+Das Blatt mit dem gr"o\ss{}ten gewichteten Fehler wird ausgew"ahlt. Ein Blatt mit vielen Punkten aber kleinem Fehler wird eher nicht gesplittet; ein Blatt mit starker Nichtlinearit"at wird bevorzugt gesplittet.
+
+\subsubsection*{3.~Bestimmung des Partitionszentrums}
+
+Das gewichtete Zentrum der Region wird berechnet:
+
+\begin{equation}
+  \mathbf{c} = \frac{\sum_{k=1}^{N} \Phi_{\mathrm{worst}}(\mathbf{z}_k) \cdot \mathbf{z}_k}{\sum_{k=1}^{N} \Phi_{\mathrm{worst}}(\mathbf{z}_k)}
+\end{equation}
+
+Der Bias wird so gesetzt, dass die Hyperebene durch dieses Zentrum l"auft:
+
+\begin{equation}
+  b = -\mathbf{w}^T \mathbf{c}
+\end{equation}
+
+\subsubsection*{4.~Erzeugung von Split-Kandidaten}
+
+F"ur das zu teilende Blatt werden m"ogliche Richtungen erzeugt:
+\begin{enumerate}
+  \item Alle Achsrichtungen $\mathbf{e}_1, \ldots, \mathbf{e}_n$
+  \item Falls \texttt{oblique=True}: zus"atzlich die Hauptachsenrichtung der gewichteten Kovarianzmatrix
+\end{enumerate}
+
+Die Kovarianzmatrix wird gewichtet aufgebaut:
+
+\begin{equation}
+  \mathbf{C} = \sum_{k=1}^{N} \Phi_{\mathrm{worst}}(\mathbf{z}_k) (\mathbf{z}_k - \bar{\mathbf{z}})(\mathbf{z}_k - \bar{\mathbf{z}})^T
+\end{equation}
+
+\subsubsection*{5.~Richtungsoptimierung im 2D-Fall}
+
+F"ur zweidimensionale Eing"ange wird die Richtung kontinuierlich optimiert:
+
+\begin{equation}
+  \mathbf{w}(\theta) = [\cos\theta, \sin\theta]^T, \qquad
+  J(\theta) = \mathrm{MSE}(\mathbf{y},\, \hat{\mathbf{y}}_{\mathrm{candidate}}(\theta))
+\end{equation}
+
+Minimiert via \texttt{scipy.optimize.minimize\_scalar} auf $[0, 2\pi]$.
+
+\subsubsection*{6.~Mindestdatenmasse}
+
+Nur wenn beide Kinder gen"ugend effektive Datenmasse besitzen, wird der Kandidat weiter betrachtet:
+
+\begin{equation}
+  \sum_k \Phi_{\mathrm{left}}(\mathbf{z}_k) \geq n_{\min}, \qquad
+  \sum_k \Phi_{\mathrm{right}}(\mathbf{z}_k) \geq n_{\min}
+\end{equation}
+
+\subsubsection*{7.~Bildung der Kind-G"ultigkeiten}
+
+\begin{equation}
+  \Phi_{\mathrm{left}}(\mathbf{z}) = \Phi_{\mathrm{parent}}(\mathbf{z}) \cdot \Psi(\mathbf{z})
+\end{equation}
+\begin{equation}
+  \Phi_{\mathrm{right}}(\mathbf{z}) = \Phi_{\mathrm{parent}}(\mathbf{z}) \cdot \bigl(1 - \Psi(\mathbf{z})\bigr)
+\end{equation}
+
+\subsubsection*{8.~Refit der lokalen Modelle}
+
+F"ur beide neuen Kindknoten werden sofort neue lokale lineare Modelle per WLS gesch"atzt:
+
+\begin{equation}
+  \boldsymbol{\theta}_{\mathrm{left}} = \arg\min_{\boldsymbol{\theta}} \sum_k \Phi_{\mathrm{left}}(\mathbf{z}_k) \left(y_k - \boldsymbol{\theta}^T \tilde{\mathbf{x}}_k\right)^2
+\end{equation}
+
+\subsubsection*{9.~Bewertung des Kandidaten-Splits}
+
+\begin{equation}
+  \hat{\mathbf{y}}_{\mathrm{new}} = \hat{\mathbf{y}}_{\mathrm{old}}
+    - \Phi_{\mathrm{parent}} \hat{\mathbf{y}}_{\mathrm{parent}}
+    + \Phi_{\mathrm{left}} \hat{\mathbf{y}}_{\mathrm{left}}
+    + \Phi_{\mathrm{right}} \hat{\mathbf{y}}_{\mathrm{right}}
+\end{equation}
+
+Nicht der lokale, sondern der \textbf{globale Trainingsfehler} entscheidet, ob ein Split gut ist.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{hilomot_3d_partition_visualization.png}
+  \caption{Visualisierung der HILOMOT-Partitionierung. Farbfl"achen zeigen dominante lokale Modelle, schwarze Linien die im Baum gespeicherten Trennhyperebenen.}
+  \label{fig:partition}
+\end{figure}
+
+% ----------------------------------------
+\subsection{Modellfit und Vorhersage}
+% ----------------------------------------
+
+\subsubsection*{1.~Skalierung von Ein- und Ausg"angen}
+
+\begin{equation}
+  \mathbf{x}_s = \frac{\mathbf{x} - \mathbf{x}_{\min}}{\mathbf{x}_{\max} - \mathbf{x}_{\min}}, \qquad
+  y_s = \frac{y - y_{\min}}{y_{\max} - y_{\min}}
+\end{equation}
+
+\subsubsection*{2.~Startmodell}
+
+Zu Beginn existiert nur ein einziges Blatt mit einem globalen linearen Modell:
+
+\begin{equation}
+  \hat{y}^{(0)}(\mathbf{x}) = \boldsymbol{\theta}_{\mathrm{root}}^T \tilde{\mathbf{x}}
+\end{equation}
+
+\subsubsection*{3.~Iterativer Refit}
+
+Jeder akzeptierte Split ersetzt genau \textbf{ein} Blatt durch \textbf{zwei} neue Bl"atter. Der Algorithmus ist damit \textbf{greedy} und lokal inkrementell.
+
+\subsubsection*{4.~Vorhersage im fertigen Modell}
+
+G"ultigkeiten werden normiert:
+
+\begin{equation}
+  V_i(\mathbf{z}) = \frac{\Phi_i(\mathbf{z})}{\displaystyle\sum_{m=1}^{M} \Phi_m(\mathbf{z})}
+\end{equation}
+
+Die finale Vorhersage lautet:
+
+\begin{equation}
+  \hat{y}(\mathbf{x}) = \sum_{i=1}^{M} V_i(\mathbf{z}) \cdot \hat{y}_i(\mathbf{x})
+\end{equation}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{hilomot_3d_visualization.png}
+  \caption{Modellierte Antwortfl"ache des trainierten HILOMOT-Netzes "uber dem Eingangsraum.}
+  \label{fig:surface}
+\end{figure}
+
+% ----------------------------------------
+\subsection{Wahl der besten Struktur}
+% ----------------------------------------
+
+\subsubsection*{Lokal beste Aufteilung}
+
+In jeder Iteration wird genau derjenige Split-Kandidat "ubernommen, der den globalen Trainings-MSE am st"arksten reduziert:
+
+\begin{equation}
+  s^* = \arg\min_{s \in \mathcal{S}_{\mathrm{current}}} \mathrm{MSE}(\mathbf{y}, \hat{\mathbf{y}}^{(s)})
+\end{equation}
+
+\subsubsection*{Abbruchkriterien}
+
+Das Baumwachstum endet, wenn mindestens eines der folgenden Kriterien erf"ullt ist:
+\begin{itemize}
+  \item \texttt{max\_leafs} ist erreicht
+  \item kein zul"assiger Split-Kandidat existiert
+  \item kein Split verbessert den aktuellen globalen Fehler
+  \item ein Kandidat verletzt die Mindestmasse \texttt{min\_samples\_per\_leaf}
+\end{itemize}
+
+\subsubsection*{Strukturwahl im Tool}
+
+Im Repository existieren daf"ur zwei Strategien:
+\begin{itemize}
+  \item \texttt{optimize\_generalization.py}: sucht Konfigurationen mit kleinem Abstand zwischen Trainings- und Validierungsfehler
+  \item \texttt{optimize\_accuracy.py}: sucht Konfigurationen mit gutem Fit bei gleichzeitiger Begrenzung von Oszillationen
+\end{itemize}
+
+% ============================================================
+\section{Gegen"uberstellung: LOLIMOT vs. HILOMOT}
+% ============================================================
+
+\begin{center}
+\begin{tabular}{p{3.5cm}p{4.5cm}p{4.5cm}}
+  \toprule
+  \textbf{Aspekt} & \textbf{LOLIMOT} & \textbf{HILOMOT} \\
+  \midrule
+  Schnitte & Achsenparallel & Beliebig orientiert \\
+  Trennfl"ache & $x_j = \mathrm{const}$ & $\mathbf{w}^\top \mathbf{x} + b = 0$ \\
+  Anzahl Modelle & Tendenziell mehr bei schr"agen Grenzen & Oft weniger n"otig \\
+  Training & Schnell, einfach & Aufwendiger \\
+  Robustheit & Sehr robust & Empfindlicher \\
+  Interpretierbarkeit & Rechtecke leicht vorstellbar & Etwas abstrakter \\
+  Gut geeignet f"ur & Achsennahe Trennungen, Prototyping & Gekoppelte Eing"ange, kompakte Modelle \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{merkbox}
+\textbf{Beide Verfahren} erzeugen glatte, interpretierbare Modelle aus lokalen linearen Bausteinen. HILOMOT enth"alt LOLIMOT als Spezialfall -- die Wahl h"angt vom konkreten Problem ab.
+\end{merkbox}
+
+% ============================================================
+\section{Mathematische Zusammenfassung}
+% ============================================================
+
+\begin{center}
+\begin{tabular}{ll}
+  \toprule
+  \textbf{Symbol} & \textbf{Bedeutung} \\
+  \midrule
+  $M$ & Anzahl lokaler Modelle (Bl"atter) \\
+  $\Phi_i(\mathbf{z})$ & G"ultigkeitsfunktion des $i$-ten Blattes \\
+  $\hat{y}_i(\mathbf{x})$ & Ausgabe des $i$-ten lokalen linearen Modells \\
+  $\boldsymbol{\theta}_i$ & Parametervektor des $i$-ten Modells \\
+  $\mathbf{w}$, $b$ & Normalenvektor und Bias der Trennhyperebene \\
+  $\kappa$ & Sch"arfeparameter (Steilheit der Sigmoid-Funktion) \\
+  $\rho$ & Gl"attigkeitsparameter (\texttt{smoothness}) \\
+  $\mu^*$ & Demanded membership value \\
+  $N$ & Anzahl der Trainingsdaten \\
+  $g(\mathbf{x})$ & Weiche Entscheidungsfunktion am Gate-Knoten \\
+  $\mathbf{C}$ & Gewichtete Kovarianzmatrix der Blattregion \\
+  $\theta$ & Winkelparameter f"ur 2D-Richtungsoptimierung \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================
+\section{Implementierung}
+% ============================================================
+
+\subsection{Projektstruktur}
+
+\begin{lstlisting}[caption={Verzeichnisstruktur des LMNTool-Projekts},language={}
+]
+LMNTool/
+|-- src/
+|   |-- main.py                    # Skript-Einstiegspunkt
+|   |-- HILO_GUI.py                # PyQt5-GUI-Hauptfenster
+|   |-- hilomot.py                 # Oeffentliche Hilomot-Klasse
+|   |-- hilomot_regressor.py       # Kernimplementierung
+|   |-- dataset.py                 # Datensatzverwaltung
+|   |-- globalmodel.py             # Globales Modell-Hilfsobjekt
+|   |-- parameter_export.py        # JSON/Text-Export
+|   |-- optimize_accuracy.py       # Hyperparameter-Optimierung
+|   |-- optimize_smoothness.py     # Hyperparameter-Optimierung
+|   |-- optimize_sharpness.py      # Hyperparameter-Optimierung
+|   +-- optimize_generalization.py # Kreuzvalidierungsbasiert
+|-- run_gui.py                     # Startskript GUI
+|-- run_main.py                    # Startskript Skriptmodus
+|-- requirements.txt               # Python-Abhaengigkeiten
++-- README.md                      # Kurzbeschreibung
+\end{lstlisting}
+
+\subsection{Klassen und Module}
+
+\subsubsection*{\texttt{HilomotRegressor} (\texttt{hilomot\_regressor.py})}
+
+Kernklasse des Algorithmus.
+
+\begin{center}
+\begin{tabular}{p{5.5cm}p{7.5cm}}
+  \toprule
+  \textbf{Methode} & \textbf{Beschreibung} \\
+  \midrule
+  \texttt{fit(X, y)} & Trainiert das Modell auf den Daten \texttt{X} (N$\times$2) und Ausgabe \texttt{y} (N,) \\
+  \texttt{predict(X)} & Berechnet die Modellvorhersage f"ur neue Eingaben \\
+  \texttt{score(X, y)} & Gibt den R\textsuperscript{2}-Wert auf dem Datensatz zur"uck \\
+  \texttt{\_compute\_leaf\_validities(Z)} & Berechnet die G"ultigkeitswerte $\Phi_i$ aller Bl"atter \\
+  \texttt{\_choose\_best\_split(...)} & Evaluiert alle Split-Kandidaten \\
+  \texttt{\_optimize\_split\_direction\_2d(...)} & Optimiert die Split-Richtung im 2D-Fall \\
+  \texttt{\_estimate\_split\_kappa(...)} & Sch"atzt $\kappa$ f"ur einen Kandidaten-Split \\
+  \texttt{\_adjust\_kappa(...)} & Passt $\kappa$ basierend auf \texttt{demanded\_membership\_value} an \\
+  \texttt{to\_dict()} / \texttt{from\_dict()} & Serialisierung als Python-Dictionary \\
+  \texttt{save\_mat()} / \texttt{from\_mat()} & Speichern/Laden im MATLAB \texttt{.mat}-Format \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection*{\texttt{HilomotTreeNode} (\texttt{hilomot\_regressor.py})}
+
+Knotenobjekt des Baums.
+
+\begin{center}
+\begin{tabular}{p{3.5cm}p{9cm}}
+  \toprule
+  \textbf{Attribut} & \textbf{Beschreibung} \\
+  \midrule
+  \texttt{w} & Gewichtsvektor $[\mathbf{w}; b]$ der Trennhyperebene \\
+  \texttt{kappa} & Sch"arfeparameter $\kappa$ \\
+  \texttt{center} & Zentrum der Partition \\
+  \texttt{parameter} & Parametervektor $\boldsymbol{\theta}_i$ des lokalen Modells \\
+  \texttt{is\_leaf} & \texttt{True} wenn Blattknoten \\
+  \texttt{left} / \texttt{right} & Kindknoten \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================
+\section{Tool-Beschreibung: LMNTool GUI}
+% ============================================================
+
+\subsection{Starten der Anwendung}
+
+\begin{lstlisting}[language=bash,caption={GUI starten}]
+python run_gui.py
+\end{lstlisting}
+
+Oder innerhalb der \texttt{src/}-Umgebung:
+
+\begin{lstlisting}[language=bash]
+python -m src.HILO_GUI
+\end{lstlisting}
+
+\subsection{Datenladen}
+
+Die GUI akzeptiert \textbf{CSV-Dateien} im 3-Spalten-Format:
+
+\begin{center}
+\begin{tabular}{lll}
+  \toprule
+  \textbf{Spalte} & \textbf{Physikalische Gr"o	tfamily{sse}} & \textbf{Beschreibung} \\
+  \midrule
+  Spalte~1 (\texttt{y}) & Tilt angle & Ausgangsgr"o	tfamily{sse (Zielwert)} \\
+  Spalte~2 (\texttt{x1}) & Shear force & Eingangsgr"o	tfamily{sse~1} \\
+  Spalte~3 (\texttt{x2}) & Normal force & Eingangsgr"o	tfamily{sse~2} \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+Das Trennzeichen wird automatisch erkannt (\texttt{;}, \texttt{,} oder Tab).
+
+\subsection{Modellparameter}
+
+\begin{center}
+\begin{tabular}{p{3.5cm}p{2cm}p{1.5cm}p{5cm}}
+  \toprule
+  \textbf{Parameter} & \textbf{GUI-Element} & \textbf{Standard} & \textbf{Beschreibung} \\
+  \midrule
+  Max Leaves & Spinbox & 15 & Maximale Anzahl lokaler Modelle \\
+  Min Samples per Leaf & Spinbox & 6 & Minimale effektive Datenpunkte pro Blatt \\
+  Smoothness ($\rho$) & Spinbox & 0{,}8 & "Uberlappungsgrad der Regionen \\
+  Membership Value ($\mu^*$) & Spinbox & 0{,}4 & Mindest-G"ultigkeit eines Datenpunkts \\
+  Oblique Splits & Checkbox & aktiv & Aktiviert schr"age Trennhyperebenen \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Empfehlungen:}
+\begin{itemize}
+  \item F"ur komplexe nichtlineare Daten: h"oheres \texttt{max\_leafs} (10--20), niedrigeres \texttt{smoothness} (0{,}3--0{,}6)
+  \item F"ur glatte Approximation: h"oheres \texttt{smoothness} (0{,}8--1{,}5), niedrigeres \texttt{max\_leafs}
+  \item \texttt{oblique=True} liefert in der Regel bessere Ergebnisse bei schr"agen Strukturen im Eingangsraum
+\end{itemize}
+
+\subsection{Training}
+
+\begin{itemize}
+  \item \textbf{Train Model}: Trainiert das Modell im Hintergrund-Thread. Die GUI bleibt reaktionsf"ahig.
+  \item \textbf{Run Full Analysis}: Vollst"andiges Training, erstellt alle Plots und exportiert das Modell automatisch.
+\end{itemize}
+
+Nach dem Training werden folgende Metriken angezeigt:
+
+\begin{center}
+\begin{tabular}{p{3cm}p{5cm}p{4.5cm}}
+  \toprule
+  \textbf{Metrik} & \textbf{Formel} & \textbf{Beschreibung} \\
+  \midrule
+  MSE & $\frac{1}{N}\sum(y_i - \hat{y}_i)^2$ & Mittlerer quadratischer Fehler \\
+  MAE & $\frac{1}{N}\sum|y_i - \hat{y}_i|$ & Mittlerer absoluter Fehler \\
+  Correlation & $r_{y,\hat{y}}$ & Pearson-Korrelationskoeffizient \\
+  R\textsuperscript{2} & $1 - \frac{SS_{\mathrm{res}}}{SS_{\mathrm{tot}}}$ & Bestimmtheitsma\ss{} \\
+  Local Models & $M$ & Anzahl der Blattknoten im Baum \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Visualisierungen}
+
+\begin{center}
+\begin{tabular}{p{4cm}p{9cm}}
+  \toprule
+  \textbf{Plot-Typ} & \textbf{Beschreibung} \\
+  \midrule
+  3D Surface & Vorhersagefl"ache $\hat{y}(x_1, x_2)$ mit Trainingsdaten \\
+  Training Data 3D & Nur die Rohdaten im 3D-Raum \\
+  Partition Map & 2D-Partitionierungsplot mit Trennlinien \\
+  Correlation Plot & Streudiagramm $y$ vs. $\hat{y}$ \\
+  Shear Force Cuts & Schnitte durch das Modell bei verschiedenen Normalkraft-Werten \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{shear_force_cuts_comparison.png}
+  \caption{Schnitte durch die modellierte Fl"ache entlang ausgew"ahlter Scherkraft-Niveaus.}
+  \label{fig:cuts}
+\end{figure}
+
+\subsection{Export}
+
+\begin{center}
+\begin{tabular}{ll}
+  \toprule
+  \textbf{Format} & \textbf{Inhalt} \\
+  \midrule
+  JSON & Vollst"andiger Baum: Knoten, Gewichte, Kappa-Werte, Modellparameter \\
+  Text & Lesbare Zusammenfassung: Metriken, lokale Modellparameter \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================
+\section{Skript-Nutzung (\texttt{main.py})}
+% ============================================================
+
+Das Skript \texttt{src/main.py} trainiert das Modell auf dem konfigurierten CSV-Datensatz und zeigt:
+\begin{enumerate}
+  \item \textbf{3D-Vorhersagefl"ache} mit Trainingsdaten
+  \item \textbf{Oblique-Partitionierungsplot} mit Trennlinien und LM-Beschriftungen
+\end{enumerate}
+
+\begin{lstlisting}[language=bash]
+python src/main.py
+\end{lstlisting}
+
+Konfigurierbare Konstanten in \texttt{main.py}:
+
+\begin{lstlisting}[language=python,caption={Konfiguration in main.py}]
+csv_path = r"\\server\pfad\zu\datei.csv"   # Datenpfad
+max_leafs = 10                              # Max. Blaetter
+min_samples_per_leaf = 10                  # Min. Samples/Blatt
+oblique = True                             # HILOMOT (True) oder LOLIMOT (False)
+\end{lstlisting}
+
+% ============================================================
+\section{Parameter-Referenz}
+% ============================================================
+
+\begin{center}
+\begin{tabular}{p{4cm}p{1.2cm}p{2.2cm}p{2cm}p{4.5cm}}
+  \toprule
+  \textbf{Parameter} & \textbf{Typ} & \textbf{Bereich} & \textbf{Empfehlung} & \textbf{Effekt} \\
+  \midrule
+  \texttt{max\_leafs} & int & 1--100 & 8--20 & Mehr Bl"atter $\Rightarrow$ h"ohere Flexibilit"at, Overfitting-Risiko \\
+  \texttt{min\_samples\_per\_leaf} & int & 1--50 & 5--15 & Zu klein $\Rightarrow$ instabile Modelle \\
+  \texttt{smoothness} & float & 0{,}1--2{,}0 & 0{,}4--1{,}0 & Kleiner $\Rightarrow$ sch"arfere "Uberg"ange \\
+  \texttt{demanded\_membership\_value} & float & 0{,}1--1{,}0 & 0{,}4--0{,}8 & H"oher $\Rightarrow$ st"arkere Lokalisierung \\
+  \texttt{oblique} & bool & -- & \texttt{True} & \texttt{True}: HILOMOT; \texttt{False}: LOLIMOT \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================
+\section{Literatur}
+% ============================================================
+
+\begin{enumerate}
+  \item \textbf{Nelles, O.} (2001). \textit{Nonlinear System Identification}. Springer, Berlin.\\
+    Grundlagenwerk zu lokalen Modellnetzen, LOLIMOT und HILOMOT.
+
+  \item \textbf{Nelles, O., Fink, A., Isermann, R.} (2000). \textit{Local Linear Model Trees (LOLIMOT) Toolbox for Nonlinear System Identification}. Proc. IFAC Symposium on System Identification (SYSID).
+
+  \item \textbf{Hartmann, B., Nelles, O.} (2009). \textit{Hierarchical Local Model Trees for Design of Experiments in the Framework of Global Model Networks}. Proc. 15th IFAC Symposium on System Identification.
+
+  \item \textbf{LMNTool MATLAB Toolbox v1.5.2.1} -- Universit"at Siegen, Lehrstuhl f"ur Regelungs- und Systemtechnik.\\
+    Referenzimplementierung, auf der diese Python-Portierung basiert.
+\end{enumerate}
+
+\end{document}
