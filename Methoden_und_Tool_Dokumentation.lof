@@ -20,6 +20,7 @@
 \contentsline {figure}{\numberline {9.4}{\ignorespaces Normalisierte Evaluation Bars: Jedes Kriterium ist auf $[0,1]$ skaliert, wobei 1 der jeweils besten Methode entspricht. Diese Darstellung macht relative St\"{a}rken/Schw\"{a}chen auf einen Blick erkennbar.}}{32}{figure.caption.26}%
 \contentsline {figure}{\numberline {9.5}{\ignorespaces Tilt Angle Cuts: Schnitte durch die modellierten Antwortfl\"{a}chen bei sechs verschiedenen Normalkraft-Niveaus ($x_2 = \mathrm {const}$). Alle f\"{u}nf Methoden werden je Schnitt \"{u}berlagert dargestellt. Abweichungen zwischen den Kurven zeigen methodenspezifische Unterschiede in Interpolation und Extrapolationsverhalten.}}{32}{figure.caption.27}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {10.1}{\ignorespaces Vergleich der modellierten Antwortfl\"{a}chen aller f\"{u}nf Methoden auf demselben Datensatz. Qualitative Unterschiede in Gl\"{a}tte, Partitionierungsstruktur und globalem Verhalten sind deutlich erkennbar.}}{36}{figure.caption.29}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {11.1}{\ignorespaces Vergleich der modellierten Antwortfl\"{a}chen aller f\"{u}nf Methoden auf demselben Datensatz. Qualitative Unterschiede in Gl\"{a}tte, Partitionierungsstruktur und globalem Verhalten sind deutlich erkennbar.}}{42}{figure.caption.34}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }

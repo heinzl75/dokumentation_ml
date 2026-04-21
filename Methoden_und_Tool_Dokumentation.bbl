@@ -270,6 +270,31 @@
       \verb 10.1007/978-3-662-04323-3
       \endverb
     \endentry
+    \entry{matlab_lmn}{online}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{1}{}{%
+        {{hash=a6482c9439d17117e06bb1190135d3f1}{%
+           family={Nelles},
+           familyi={N\bibinitperiod},
+           given={Oliver},
+           giveni={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{4c9ec2254bc74cd34a59cd6b195cb74f}
+      \strng{fullhash}{4c9ec2254bc74cd34a59cd6b195cb74f}
+      \strng{bibnamehash}{4c9ec2254bc74cd34a59cd6b195cb74f}
+      \strng{authorbibnamehash}{4c9ec2254bc74cd34a59cd6b195cb74f}
+      \strng{authornamehash}{4c9ec2254bc74cd34a59cd6b195cb74f}
+      \strng{authorfullhash}{4c9ec2254bc74cd34a59cd6b195cb74f}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://www.uni-siegen.de/fb12/mrt/forschung/lmntool/}}
+      \field{note}{Universität Siegen, Lehrstuhl für Mess- und Regelungstechnik. Abgerufen am 15. April 2026}
+      \field{title}{{LMNTool} -- Local Model Network Toolbox for {MATLAB}, Version 1.5.2.1}
+      \field{year}{2018}
+    \endentry
     \entry{pedregosa2011}{article}{}
       \name{author}{16}{}{%
         {{hash=bab4e5caee2d67831e464ce575022b37}{%

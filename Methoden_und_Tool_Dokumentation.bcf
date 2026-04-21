@@ -2421,7 +2421,10 @@
     <bcf:citekey order="39" intorder="1">rasmussen2006</bcf:citekey>
     <bcf:citekey order="40" intorder="1">matlab_lmnhelp</bcf:citekey>
     <bcf:citekey order="41" intorder="1">pedregosa2011</bcf:citekey>
-    <bcf:citekey order="42" intorder="1">matlab_svr</bcf:citekey>
+    <bcf:citekey order="42" intorder="1">matlab_lmnhelp</bcf:citekey>
+    <bcf:citekey order="42" intorder="2">matlab_lmn</bcf:citekey>
+    <bcf:citekey order="43" intorder="1">matlab_lmn</bcf:citekey>
+    <bcf:citekey order="44" intorder="1">matlab_svr</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nyt">
