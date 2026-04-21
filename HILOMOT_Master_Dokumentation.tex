@@ -838,7 +838,37 @@
 	% ============================================================
 	\section{Tool-Beschreibung: LMNTool GUI}
 	% ============================================================
-	
+
+	Die \textbf{LMNTool GUI} ist eine grafische Benutzeroberfläche auf Basis von PyQt5, die sämtliche Schritte des datengetriebenen Modellierungsworkflows in einer einzigen Anwendung zusammenfasst: Datenladen, Parametrierung, Training, Visualisierung und Export.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{figures/MeinWindowLMNTool.png}
+		\caption{Hauptfenster der LMNTool GUI nach erfolgreichem Training. Im oberen Bereich befinden sich die Steuerelemente für Datenladen, Methodenwahl und Parameter. Im mittleren Bereich werden Metriken und Plots angezeigt; der untere Bereich stellt Exportfunktionen bereit.}
+		\label{fig:mainwindow}
+	\end{figure}
+
+	\subsubsection*{Aufbau des Hauptfensters}
+
+	Das Hauptfenster gliedert sich in folgende Bereiche:
+	\begin{itemize}
+		\item \textbf{Werkzeugleiste oben:} Schaltflächen für \texttt{Load CSV}, \texttt{Train Model} und \texttt{Run Full Analysis}. Nach dem Laden einer gültigen Datendatei werden die Trainings- und Exportfunktionen freigeschaltet.
+		\item \textbf{Methoden-Tabs:} Je ein Parametertab für HILOMOT, LOLIMOT, MLP, SVR und GPR. Jeder Tab enthält die methodenspezifischen Hyperparameter als Spin-Boxen oder Checkboxen.
+		\item \textbf{Decision-Weights-Tab:} Interaktive Gewichtung der Bewertungskriterien (Accuracy, Extrapolationslinearität, Interpretierbarkeit, numerische Effizienz, Rauschrobustheit) für den automatischen Methodenvergleich.
+		\item \textbf{Ergebnisbereich:} Tabellarische Anzeige der Gütekennzahlen (MSE, MAE, Korrelation, R\textsuperscript{2}, Modellanzahl) für alle trainierten Verfahren. Farbliche Hervorhebung der jeweils besten Kennzahl.
+		\item \textbf{Plot-Bereich:} Interaktive Visualisierungen, auswählbar über einen Tab-Strip (\textit{3D Surface}, \textit{Training Data 3D}, \textit{Partition Map}, \textit{Correlation Plot}, \textit{Shear Force Cuts}).
+		\item \textbf{Statusleiste unten:} Fortschrittsanzeige während des Trainings sowie Statusmeldungen über Lade- und Speichervorgänge.
+	\end{itemize}
+
+	Der \textbf{typische Arbeitsablauf} in der GUI ist:
+	\begin{enumerate}
+		\item CSV laden $\rightarrow$ 3D-Datenvorschau erscheint automatisch.
+		\item Methode(n) parametrieren $\rightarrow$ Tabs konfigurieren.
+		\item \texttt{Train Model} klicken $\rightarrow$ Ergebnisse und Plots aktualisieren sich.
+		\item Plots und Kennzahlen vergleichen; ggf. Parameter anpassen und erneut trainieren.
+		\item Modell über \texttt{Export JSON} oder \texttt{Export Text} sichern.
+	\end{enumerate}
+
 	\subsection{Starten der Anwendung}
 	
 	\begin{lstlisting}[language=bash,caption={GUI starten}]
