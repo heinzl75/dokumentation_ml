@@ -1,0 +1,25 @@
+\babel@toc {ngerman}{}\relax 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces 3D-Ansicht der Trainingsdaten nach dem CSV-Import im LMNTool. Die Zielgr\"{o}\ss {}e $y$ (Tilt Angle) ist als farbcodierte H\"{o}he \"{u}ber den Eingansgr\"{o}\ss {}en $x_1$ (Shear Force) und $x_2$ (Normal Force) aufgetragen (blau\,$=$\,kleine Werte, rot\,$=$\,gro\ss {}e Werte).}}{3}{figure.caption.4}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Modellierte Antwortfl\"{a}che (LOLIMOT). Im Vergleich zu HILOMOT k\"{o}nnen achsenparallele Splits bei schr\"{a}g orientierten Strukturen leicht h\"{o}here Stufenm\"{a}\ss {}igkeit erzeugen. Die G\"{u}ltigkeitsfunktionen gew\"{a}hrleisten aber immer eine global glatte Fl\"{a}che.}}{12}{figure.caption.7}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces HILOMOT: Links die 3D-Vorhersagefl\"{a}che, rechts die Partitionierungskarte. Jede Farbe entspricht einem dominanten lokalen Modell; die Linien zeigen die Trennhyperebenen. Oblique (schr\"{a}ge) Trennlinien sind f\"{u}r HILOMOT charakteristisch und erm\"{o}glichen eine effizientere Beschreibung diagonaler Strukturen als achsenparallele Schnitte.}}{15}{figure.caption.9}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Modellierte Antwortfl\"{a}che (MLP). Das neuronale Netz approximiert die Zielfunktion als globale, glatte nichtlineare Abbildung ohne sichtbare Partitionierungsstruktur. Die Oberfl\"{a}che ist weicher und weniger strukturiert als bei HILOMOT/LOLIMOT.}}{19}{figure.caption.13}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Modellierte Antwortfl\"{a}che (SVR mit RBF-Kernel). Der Kernel erm\"{o}glicht die Approxi- mation komplexer Nichtlinearit\"{a}ten bei gleichzeitig kontrollierter Komplexit\"{a}t durch~$C$.}}{23}{figure.caption.16}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {8.1}{\ignorespaces Modellierte Antwortfl\"{a}che (GPR). Gaussian Process Regression liefert eine sehr glatte Approximation, die eng den Trainingsdaten folgt. In datenleeren Randbereichen zieht das Modell in Richtung der Priorfunktion.}}{27}{figure.caption.19}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {9.1}{\ignorespaces 3D-Datenvorschau im LMNTool nach dem CSV-Import. Die Visualisierung erm\"{o}glicht eine erste visuelle Plausibilit\"{a}tspr\"{u}fung -- z.\,B.\ auf Ausrei\ss {}er, L\"{u}cken oder unerwartete Strukturen.}}{30}{figure.caption.22}%
+\contentsline {figure}{\numberline {9.2}{\ignorespaces Korrelationsplot im LMNTool: gemessene Zielwerte $y$ vs.\ Modellvorhersage $\hat {y}$. Gute Regression: Punkte nahe der Winkelhalbierenden. Systematische Abweichungen zeigen Modellbias.}}{31}{figure.caption.24}%
+\contentsline {figure}{\numberline {9.3}{\ignorespaces Evaluation Bars: absoluter Vergleich aller f\"{u}nf Methoden \"{u}ber die Kriterien Accuracy, Extrapolation Linearity, Numerical Efficiency und Interpretability.}}{31}{figure.caption.25}%
+\contentsline {figure}{\numberline {9.4}{\ignorespaces Normalisierte Evaluation Bars: Jedes Kriterium ist auf $[0,1]$ skaliert, wobei 1 der jeweils besten Methode entspricht. Diese Darstellung macht relative St\"{a}rken/Schw\"{a}chen auf einen Blick erkennbar.}}{32}{figure.caption.26}%
+\contentsline {figure}{\numberline {9.5}{\ignorespaces Tilt Angle Cuts: Schnitte durch die modellierten Antwortfl\"{a}chen bei sechs verschiedenen Normalkraft-Niveaus ($x_2 = \mathrm {const}$). Alle f\"{u}nf Methoden werden je Schnitt \"{u}berlagert dargestellt. Abweichungen zwischen den Kurven zeigen methodenspezifische Unterschiede in Interpolation und Extrapolationsverhalten.}}{32}{figure.caption.27}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {10.1}{\ignorespaces Vergleich der modellierten Antwortfl\"{a}chen aller f\"{u}nf Methoden auf demselben Datensatz. Qualitative Unterschiede in Gl\"{a}tte, Partitionierungsstruktur und globalem Verhalten sind deutlich erkennbar.}}{36}{figure.caption.29}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }

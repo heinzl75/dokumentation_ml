@@ -1,0 +1,18 @@
+[0] Config.pm:307> INFO - This is Biber 2.19
+[0] Config.pm:310> INFO - Logfile is 'Methoden_und_Tool_Dokumentation.blg'
+[66] biber:340> INFO - === Tue Apr 21, 2026, 11:38:50
+[80] Biber.pm:419> INFO - Reading 'Methoden_und_Tool_Dokumentation.bcf'
+[134] Biber.pm:979> INFO - Found 21 citekeys in bib section 0
+[144] Biber.pm:4419> INFO - Processing section 0
+[198] Biber.pm:4610> INFO - Looking for bibtex file 'references.bib' for section 0
+[199] bibtex.pm:1713> INFO - LaTeX decoding ...
+[216] bibtex.pm:1519> INFO - Found BibTeX data source 'references.bib'
+[406] UCollate.pm:68> INFO - Overriding locale 'de-DE' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[406] UCollate.pm:68> INFO - Overriding locale 'de-DE' defaults 'variable = shifted' with 'variable = non-ignorable'
+[406] Biber.pm:4239> INFO - Sorting list 'nyt/global//global/global' of type 'entry' with template 'nyt' and locale 'de-DE'
+[407] Biber.pm:4245> INFO - No sort tailoring available for locale 'de-DE'
+[577] bbl.pm:660> INFO - Writing 'Methoden_und_Tool_Dokumentation.bbl' with encoding 'UTF-8'
+[583] bbl.pm:763> INFO - Output to Methoden_und_Tool_Dokumentation.bbl
+[583] Biber.pm:131> WARN - ISBN '978-3-540-67369-6' in entry 'nelles2001' is invalid - run biber with '--validate_datamodel' for details.
+[583] Biber.pm:131> WARN - ISBN '978-0-7484-0595-7' in entry 'murray1998' is invalid - run biber with '--validate_datamodel' for details.
+[583] Biber.pm:133> INFO - WARNINGS: 2

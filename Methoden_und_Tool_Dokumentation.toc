@@ -1,0 +1,97 @@
+\babel@toc {ngerman}{}\relax 
+\contentsline {chapter}{Abbildungsverzeichnis}{vi}{chapter*.2}%
+\contentsline {chapter}{Tabellenverzeichnis}{vii}{chapter*.3}%
+\contentsline {chapter}{\numberline {1}Einleitung}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Motivation und Hintergrund}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Ziel und Aufbau der Dokumentation}{1}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Verwendeter Datensatz}{2}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Mathematische Grundlagen der Regression}{4}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Was ist Regression?}{4}{section.2.1}%
+\contentsline {section}{\numberline {2.2}G\"{u}tekriterien}{4}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Mittlerer quadratischer Fehler (MSE)}{4}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Mittlerer absoluter Fehler (MAE)}{5}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Wurzel des MSE (RMSE)}{5}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Bestimmtheitsma\ss {} $R^2$}{5}{subsection.2.2.4}%
+\contentsline {section}{\numberline {2.3}Kreuzvalidierung (Cross-Validation)}{5}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}$k$-fache Kreuzvalidierung}{5}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Leave-One-Out Kreuzvalidierung (LOOCV)}{6}{subsection.2.3.2}%
+\contentsline {section}{\numberline {2.4}Bias-Varianz-Dilemma}{6}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Normierung und Skalierung}{6}{section.2.5}%
+\contentsline {chapter}{\numberline {3}Lokale Modellnetze -- Grundlagen}{7}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Motivation: St\"{u}ckweise lineare Approximation}{7}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Mathematische Formulierung eines LMN}{7}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Partition of Unity}{8}{subsection.3.2.1}%
+\contentsline {section}{\numberline {3.3}G\"{u}ltigkeitsfunktionen und Sigmoid-Splits}{8}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Training der lokalen Modellparameter}{8}{section.3.4}%
+\contentsline {chapter}{\numberline {4}LOLIMOT -- Local Linear Model Tree}{9}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Einf\"{u}hrung und historischer Hintergrund}{9}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Grundprinzip: Achsenparallele Splits}{9}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Algorithmus: LOLIMOT Tree Growing}{10}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Sigmoid-G\"{u}ltigkeitsfunktionen und Smoothness}{10}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Bezug zur MATLAB LMNTool-Toolbox}{10}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Hyperparameter von LOLIMOT}{11}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Antwortfl\"{a}che (LOLIMOT)}{12}{section.4.7}%
+\contentsline {section}{\numberline {4.8}St\"{a}rken und Schw\"{a}chen von LOLIMOT}{12}{section.4.8}%
+\contentsline {chapter}{\numberline {5}HILOMOT -- Hierarchical Local Model Tree}{13}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Einf\"{u}hrung und Motivation}{13}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Oblique Splits: Mathematische Grundlage}{13}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Baumstruktur}{14}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Algorithmus: HILOMOT Tree Growing}{14}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Demanded Membership Value}{15}{section.5.5}%
+\contentsline {section}{\numberline {5.6}Visualisierungen: Antwortfl\"{a}che und Partitionierungskarte}{15}{section.5.6}%
+\contentsline {section}{\numberline {5.7}Hyperparameter von HILOMOT}{16}{section.5.7}%
+\contentsline {section}{\numberline {5.8}St\"{a}rken und Schw\"{a}chen von HILOMOT}{16}{section.5.8}%
+\contentsline {chapter}{\numberline {6}MLP -- Multilayer Perceptron}{17}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Einf\"{u}hrung und historischer Hintergrund}{17}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Architektur}{17}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Aktivierungsfunktionen}{18}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Backpropagation und Gradientenabstieg}{18}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Regularisierung: L2-Bestrafung}{18}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Universelle Approximationseigenschaft}{19}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Antwortfl\"{a}che}{19}{section.6.7}%
+\contentsline {section}{\numberline {6.8}Hyperparameter von MLPRegressor}{20}{section.6.8}%
+\contentsline {section}{\numberline {6.9}St\"{a}rken und Schw\"{a}chen von MLP}{20}{section.6.9}%
+\contentsline {chapter}{\numberline {7}SVR -- Support Vector Regression}{21}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Einf\"{u}hrung und historischer Hintergrund}{21}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Das $\varepsilon $-insensitive Verlustprinzip}{21}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Prim\"{a}res Optimierungsproblem}{21}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Duales Problem und Kernel-Trick}{22}{section.7.4}%
+\contentsline {section}{\numberline {7.5}RBF-Kernel}{22}{section.7.5}%
+\contentsline {section}{\numberline {7.6}Antwortfl\"{a}che}{23}{section.7.6}%
+\contentsline {section}{\numberline {7.7}Hyperparameter von SVR}{23}{section.7.7}%
+\contentsline {section}{\numberline {7.8}St\"{a}rken und Schw\"{a}chen von SVR}{24}{section.7.8}%
+\contentsline {chapter}{\numberline {8}GPR -- Gaussian Process Regression}{25}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Einf\"{u}hrung und historischer Hintergrund}{25}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Grundkonzept: Verteilung \"{u}ber Funktionen}{25}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Kovarianzfunktionen (Kernel)}{25}{section.8.3}%
+\contentsline {subsection}{\numberline {8.3.1}Squared Exponential (RBF) Kernel}{26}{subsection.8.3.1}%
+\contentsline {subsection}{\numberline {8.3.2}Mat\'{e}rn-Kernel}{26}{subsection.8.3.2}%
+\contentsline {subsection}{\numberline {8.3.3}Rauschterm}{26}{subsection.8.3.3}%
+\contentsline {section}{\numberline {8.4}Bayes'sche Inferenz: Posterior-Verteilung}{26}{section.8.4}%
+\contentsline {section}{\numberline {8.5}Hyperparameter-Optimierung via Marginal Likelihood}{26}{section.8.5}%
+\contentsline {section}{\numberline {8.6}Antwortfl\"{a}che}{27}{section.8.6}%
+\contentsline {section}{\numberline {8.7}Hyperparameter von GaussianProcessRegressor}{27}{section.8.7}%
+\contentsline {section}{\numberline {8.8}St\"{a}rken und Schw\"{a}chen von GPR}{28}{section.8.8}%
+\contentsline {chapter}{\numberline {9}LMNTool Multi GUI}{29}{chapter.9}%
+\contentsline {section}{\numberline {9.1}\"{U}berblick und Architektur}{29}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Datenimport und Vorverarbeitung}{29}{section.9.2}%
+\contentsline {section}{\numberline {9.3}Methoden-Tabs und Parametrierung}{30}{section.9.3}%
+\contentsline {section}{\numberline {9.4}Training und Bewertungslogik}{30}{section.9.4}%
+\contentsline {section}{\numberline {9.5}Visualisierungen}{31}{section.9.5}%
+\contentsline {section}{\numberline {9.6}Report- und Datenexport}{32}{section.9.6}%
+\contentsline {chapter}{\numberline {10}Vergleich der Methoden}{34}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Methoden\"{u}berblick}{34}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Vergleich der Antwortfl\"{a}chen}{36}{section.10.2}%
+\contentsline {section}{\numberline {10.3}Tabellarischer Vergleich}{37}{section.10.3}%
+\contentsline {section}{\numberline {10.4}Rechenkomplexit\"{a}t}{37}{section.10.4}%
+\contentsline {section}{\numberline {10.5}Anwendungsempfehlungen}{37}{section.10.5}%
+\contentsline {chapter}{\numberline {11}Diskussion}{39}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Interpretation der Ergebnisse}{39}{section.11.1}%
+\contentsline {section}{\numberline {11.2}Kritische Betrachtung der Hyperparameterwahl}{39}{section.11.2}%
+\contentsline {section}{\numberline {11.3}Generalisierungsf\"{a}higkeit und Extrapolation}{40}{section.11.3}%
+\contentsline {section}{\numberline {11.4}Grenzen des Vergleichs}{40}{section.11.4}%
+\contentsline {chapter}{\numberline {12}Zusammenfassung}{41}{chapter.12}%
+\contentsline {section}{\numberline {12.1}Wichtigste Erkenntnisse}{41}{section.12.1}%
+\contentsline {section}{\numberline {12.2}Praktische Handlungsempfehlungen}{41}{section.12.2}%
+\contentsline {section}{\numberline {12.3}Ausblick}{42}{section.12.3}%
+\contentsline {chapter}{Literaturverzeichnis}{43}{chapter*.31}%
