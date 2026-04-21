@@ -34,6 +34,7 @@
 \setlength{\parskip}{6pt}
 \setlength{\parindent}{0pt}
 \onehalfspacing
+\graphicspath{{figures/}}
 
 % ============================================================
 % FARBEN & BOXEN
@@ -134,7 +135,7 @@
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.85\textwidth]{hilomot_3d_partition_comparison.png}
+		\includegraphics[width=0.85\textwidth]{figures/hilomot_3d_partition_comparison.png}
 		\caption{Typische Ausgabe des Python-Tools mit modellierter 3D-Ergebnisfläche und zugehörig em Partitionierungsplot.}
 		\label{fig:intro}
 	\end{figure}
@@ -491,7 +492,7 @@
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.85\textwidth]{hilomot_3d_partition_visualization.png}
+		\includegraphics[width=0.85\textwidth]{figures/hilomot_3d_partition_visualization.png}
 		\caption{Visualisierung der HILOMOT-Partitionierung. Farbflächen zeigen dominante lokale Modelle, schwarze Linien die im Baum gespeicherten Trennhyperebenen.}
 		\label{fig:partition}
 	\end{figure}
@@ -535,7 +536,7 @@
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.85\textwidth]{hilomot_3d_visualization.png}
+		\includegraphics[width=0.85\textwidth]{figures/hilomot_3d_visualization.png}
 		\caption{Modellierte Antwortfläche des trainierten HILOMOT-Netzes über dem Eingangsraum.}
 		\label{fig:surface}
 	\end{figure}
@@ -593,6 +594,151 @@
 	\begin{merkbox}
 		\textbf{Beide Verfahren} erzeugen glatte, interpretierbare Modelle aus lokalen linearen Bausteinen. HILOMOT enthält LOLIMOT als Spezialfall -- die Wahl hängt vom konkreten Problem ab.
 	\end{merkbox}
+
+	% ============================================================
+	\section{Methodische Vertiefung mit Online-Dokumenten}
+	% ============================================================
+
+	Dieses Kapitel erweitert die bisherige Darstellung um praxisorientierte methodische Leitlinien und referenziert gezielt frei verfügbare Online-Dokumente. Die Inhalte sind so strukturiert, dass sie sowohl für die wissenschaftliche Einordnung als auch für die direkte Anwendung im Projektalltag nutzbar sind.
+
+	\subsection{HILOMOT im Kontext lokaler Expertenmodelle}
+
+	HILOMOT kann als Spezialisierung von \emph{Mixture-of-Experts}-Ideen verstanden werden, bei der die Experten bewusst linear gehalten und über hierarchische, weiche Gate-Funktionen kombiniert werden. Der zentrale methodische Vorteil ist, dass Modellkomplexität räumlich dort aufgebaut wird, wo sie benötigt wird.
+
+	\subsubsection*{Bias-Varianz-Betrachtung}
+
+	Globale lineare Modelle weisen typischerweise hohen Bias auf, während sehr flexible globale Nichtlinearitäten bei kleinen Datensätzen hohe Varianz erzeugen können. HILOMOT liegt zwischen diesen Polen:
+	\begin{itemize}
+		\item niedriger Bias in stark nichtlinearen Teilregionen durch lokale Aufspaltung,
+		\item kontrollierte Varianz durch Begrenzung der Blattzahl, Mindestmassenbedingung und weiche Übergänge.
+	\end{itemize}
+
+	Diese Balance macht lokale Modellnetze insbesondere dann attraktiv, wenn ein hoher Anspruch an technische Nachvollziehbarkeit besteht.
+
+	\subsubsection*{Partitionierungsgeometrie}
+
+	Methodisch ist die Wahl der Trenngeometrie entscheidend. Achsenparallele Splits approximieren schräge Grenzverläufe nur stückweise. Oblique Splits modellieren dieselben Strukturen mit weniger Regionen, erhöhen jedoch den Suchraum bei der Optimierung. Daraus folgt:
+	\begin{itemize}
+		\item für schnell robuste Baselines: achsenparallele Kandidaten priorisieren,
+		\item für kompakte Endmodelle: oblique Kandidaten zulassen und Validierung stärker gewichten.
+	\end{itemize}
+
+	\subsubsection*{Empfohlene Trainingsstrategie}
+
+	Eine praxistaugliche Strategie ist ein zweistufiges Vorgehen:
+	\begin{enumerate}
+		\item zunächst konservatives Baumwachstum mit moderater Blattzahl und relativ glatten Übergängen,
+		\item anschließend Feintuning mit erhöhter Flexibilität nur dann, wenn Validierungsfehler und Residualanalyse klare Verbesserungspotenziale zeigen.
+	\end{enumerate}
+
+	Damit wird verhindert, dass frühe, zufallsbedingte Aufteilungen unnötig stark in die finale Struktur eingehen.
+
+	\subsection{LOLIMOT als robuste Referenzmethode}
+
+	LOLIMOT bleibt methodisch relevant, weil der algorithmische Kern einfach, gut interpretierbar und in vielen industriellen Workflows etabliert ist. Besonders bei geringer Datenmenge oder starkem Messrauschen liefert LOLIMOT häufig stabilere Erstmodelle als komplexere Verfahren.
+
+	\subsubsection*{Wann LOLIMOT vorzuziehen ist}
+
+	LOLIMOT ist oft die erste Wahl, wenn:
+	\begin{itemize}
+		\item Modellabnahme und Auditierbarkeit zentral sind,
+		\item Eingangsgrößen physikalisch weitgehend entkoppelt wirken,
+		\item schnelle Iterationszyklen wichtiger sind als absolute Minimalfehler.
+	\end{itemize}
+
+	\subsubsection*{Methodische Grenze}
+
+	Die zentrale Grenze liegt in der Geometrie: stark gekoppelte Richtungen im Eingangsraum müssen mit vielen achsenparallelen Splits approximiert werden. Dadurch steigen Modellgröße und Pflegeaufwand.
+
+	\subsection{MLP (Multilayer Perceptron) im Vergleichsrahmen}
+
+	MLP-Modelle approximieren nichtlineare Funktionen über verschachtelte affine Abbildungen und nichtlineare Aktivierungen. In vielen Datenszenarien sind sie sehr leistungsfähig, methodisch aber deutlich weniger transparent als lokale Modellnetze.
+
+	\subsubsection*{Trainingsdynamik}
+
+	Das Optimierungsproblem ist nichtkonvex. Gute Ergebnisse hängen stark von Initialisierung, Lernrate, Regularisierung und Skalierung ab. Für reproduzierbare Projekte empfiehlt sich:
+	\begin{itemize}
+		\item standardisierte Vorverarbeitung,
+		\item feste Zufallsseeds,
+		\item dokumentierte Hyperparameter-Raster.
+	\end{itemize}
+
+	\subsubsection*{Interpretierbarkeit}
+
+	MLP kann als leistungsfähige Referenz für reine Prognosegüte dienen. Für kausale Diskussionen, Regelungsentwürfe oder sicherheitskritische Freigaben ist oft eine zusätzliche Surrogat- oder Sensitivitätsanalyse erforderlich.
+
+	\subsection{SVR (Support Vector Regression) als margin-basierte Methode}
+
+	SVR minimiert die Modellkomplexität unter Berücksichtigung einer $\epsilon$-insensitiven Fehlerzone. Dadurch entsteht ein robuster Kompromiss zwischen Glättung und Fit.
+
+	\subsubsection*{Hyperparameterwirkung}
+
+	\begin{itemize}
+		\item $C$ steuert die Strafstärke für Verletzungen der $\epsilon$-Zone,
+		\item $\epsilon$ definiert die Breite der tolerierten Fehlerzone,
+		\item $\gamma$ (RBF) kontrolliert die lokale Krümmung des Funktionsraums.
+	\end{itemize}
+
+	Methodisch sinnvoll ist eine koordinierte Suche in logarithmischen Bereichen, da die Parameterwirkung nichtlinear ist.
+
+	\subsection{GPR (Gaussian Process Regression) für probabilistische Modellierung}
+
+	GPR liefert neben dem Erwartungswert explizit eine Unsicherheitsabschätzung. Das ist für adaptive Versuchsplanung, aktive Datenerhebung und risikobewusste Entscheidungen methodisch sehr wertvoll.
+
+	\subsubsection*{Kernelnahes Denken}
+
+	Die Wahl des Kernels kodiert Annahmen über Glattheit, Periodizität und Relevanzlängen der Eingänge. Für technisch-physikalische Anwendungen ist die transparente Dokumentation dieser Annahmen wichtiger als reine Kennzahloptimierung.
+
+	\subsubsection*{Skalierungsgrenze}
+
+	Der kubische Rechenaufwand klassischer GPR-Lösungen begrenzt die direkte Einsetzbarkeit bei großen Datensätzen. In solchen Fällen sind sparse oder induzierende Approximationen notwendig.
+
+	\subsection{Methodischer Gesamtvergleich als Entscheidungsrahmen}
+
+	Für Projektentscheidungen empfiehlt sich ein mehrkriterielles Bewertungsraster:
+	\begin{enumerate}
+		\item Prognosegüte auf unabhängigen Daten,
+		\item Stabilität bei Hyperparameteränderung,
+		\item Interpretierbarkeit und fachliche Plausibilität,
+		\item numerische Effizienz in Training und Inferenz,
+		\item Robustheit gegenüber Messrauschen und Ausreißern.
+	\end{enumerate}
+
+	Damit wird vermieden, dass ein Verfahren ausschließlich auf Basis einer einzelnen Fehlerkennzahl ausgewählt wird.
+
+	\subsection{Empfohlener Evaluationsprozess}
+
+	Ein belastbarer Prozess umfasst:
+	\begin{itemize}
+		\item einheitliche Datensplits und Vorverarbeitung über alle Verfahren,
+		\item dokumentierte Hyperparameter-Suchräume,
+		\item wiederholte Validierung mit mehreren Seeds,
+		\item Residualanalysen entlang fachlich relevanter Betriebspunkte,
+		\item Gegenprüfung auf Extrapolationsverhalten.
+	\end{itemize}
+
+	Erst die Kombination dieser Schritte liefert eine robuste methodische Aussagekraft.
+
+	\subsection{Vertiefende methodische Hinweise aus Online-Dokumentationen}
+
+	Die folgenden Punkte fassen zentrale Empfehlungen aus aktuellen Online-Referenzen zusammen:
+	\begin{itemize}
+		\item Für MLP, SVR und GPR ist Feature-Skalierung ein dominanter Erfolgsfaktor.
+		\item Für lokale Modellnetze ist die Trenngeometrie häufig wichtiger als eine aggressive Erhöhung der Modellanzahl.
+		\item Für alle Methoden gilt: Hyperparameter sind daten- und zielgrößenabhängig; Default-Werte sind Startpunkte, keine Endlösung.
+	\end{itemize}
+
+	\subsection{Praxisleitfaden zur Methodenauswahl im LMNTool-Kontext}
+
+	\begin{enumerate}
+		\item \textbf{Phase 1 -- Baseline:} LOLIMOT mit konservativen Parametern trainieren.
+		\item \textbf{Phase 2 -- Strukturgewinn:} HILOMOT aktivieren und prüfen, ob ähnliche oder bessere Güte mit weniger Blättern erreichbar ist.
+		\item \textbf{Phase 3 -- Nichtlineare Referenz:} MLP und SVR als globale Vergleichsmodelle mit standardisiertem Tuning einsetzen.
+		\item \textbf{Phase 4 -- Unsicherheitsblick:} GPR zur qualitativen Unsicherheitsbewertung ergänzen.
+		\item \textbf{Phase 5 -- Entscheidung:} Modellwahl über Mehrkriteriensicht und fachliche Plausibilität finalisieren.
+	\end{enumerate}
+
+	Diese Abfolge verbindet Interpretierbarkeit, Prognoseleistung und methodische Nachvollziehbarkeit.
 	
 	% ============================================================
 	\section{Mathematische Zusammenfassung}
@@ -788,7 +934,7 @@
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.85\textwidth]{hilomot_shear_cup_plots.png}
+		\includegraphics[width=0.85\textwidth]{figures/hilomot_shear_cup_plots.png}
 		\caption{Schnitte durch die modellierte Fläche entlang ausgewählter Scherkraft-Niveaus.}
 		\label{fig:cuts}
 	\end{figure}
@@ -861,6 +1007,27 @@
 		
 		\item \textbf{LMNTool MATLAB Toolbox v1.5.2.1} -- Universität Siegen, Lehrstuhl für Regelungs- und Systemtechnik.\\
 		Referenzimplementierung, auf der diese Python-Portierung basiert.
+
+		\item \textbf{scikit-learn Dokumentation -- MLPRegressor}.\\
+		\href{https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html}{https://scikit-learn.org/stable/modules/generated/sklearn.neural\_network.MLPRegressor.html}
+
+		\item \textbf{scikit-learn Dokumentation -- SVR}.\\
+		\href{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html}{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html}
+
+		\item \textbf{scikit-learn Dokumentation -- GaussianProcessRegressor}.\\
+		\href{https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html}{https://scikit-learn.org/stable/modules/generated/sklearn.gaussian\_process.GaussianProcessRegressor.html}
+
+		\item \textbf{Bishop, C. M.} (2006). \textit{Pattern Recognition and Machine Learning}.\\
+		Begleitinformationen und Errata online: \href{https://www.microsoft.com/en-us/research/people/cmbishop/prml-book/}{https://www.microsoft.com/en-us/research/people/cmbishop/prml-book/}
+
+		\item \textbf{Rasmussen, C. E., Williams, C. K. I.} (2006). \textit{Gaussian Processes for Machine Learning}.\\
+		Online frei verfügbar: \href{https://gaussianprocess.org/gpml/}{https://gaussianprocess.org/gpml/}
+
+		\item \textbf{LIBSVM -- A Library for Support Vector Machines}.\\
+		Projektseite und Dokumentation: \href{https://www.csie.ntu.edu.tw/~cjlin/libsvm/}{https://www.csie.ntu.edu.tw/\textasciitilde cjlin/libsvm/}
+
+		\item \textbf{Goodfellow, I., Bengio, Y., Courville, A.} (2016). \textit{Deep Learning}.\\
+		Online verfügbar: \href{https://www.deeplearningbook.org/}{https://www.deeplearningbook.org/}
 	\end{enumerate}
 	
 \end{document}
