@@ -16,10 +16,12 @@
 \usepackage{listings}
 \usepackage{enumitem}
 \usepackage{tcolorbox}
+\usepackage{graphicx}
 \usepackage{float}
 \usepackage{microtype}
 \usepackage{lmodern}
 \usepackage{setspace}
+\usepackage{subcaption}
 
 % ============================================================
 % LAYOUT
@@ -121,6 +123,13 @@ Der Schwerpunkt liegt auf:
 Alle Verfahren werden im Tool auf denselben Datenstrukturen verglichen (Zielgröße $y$ und Eingangsgrößen $x_1, x_2$), damit Kennzahlen und Visualisierungen direkt gegenüberstellbar sind.
 \end{hinweisbox}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\textwidth]{training_data_3d.png}
+\caption{3D-Ansicht der Trainingsdaten nach dem CSV-Import. Die Zielgröße $y$ (Tilt Angle) wird als farbcodierte Höhe über den Eingangsgrößen $x_1$ (Shear Force) und $x_2$ (Normal Force) dargestellt.}
+\label{fig:training_data}
+\end{figure}
+
 % ============================================================
 \section{Methodenüberblick}
 % ============================================================
@@ -174,6 +183,23 @@ Dadurch können diagonale oder gekoppelte Eingangsstrukturen oft mit weniger Bl�
 HILOMOT liefert typischerweise eine gute Balance aus Genauigkeit und Interpretierbarkeit, weil lokale Modelle physikalisch plausibel bleiben und gleichzeitig flexible Trennungen möglich sind.
 \end{merkbox}
 
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+  \includegraphics[width=\textwidth]{surface_hilomot.png}
+  \caption{Modellierte Antwortfläche (HILOMOT)}
+  \label{fig:surface_hilomot}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+  \includegraphics[width=\textwidth]{partition_map.png}
+  \caption{Partitionierungskarte mit obliquen Trennlinien}
+  \label{fig:partition_map}
+\end{subfigure}
+\caption{HILOMOT: 3D-Vorhersagefläche und zugehörige Partitionierungskarte. Die farbigen Regionen in der Karte zeigen die dominanten lokalen Modelle, die schwarzen Linien die gespeicherten Trennhyperebenen.}
+\label{fig:hilomot_combined}
+\end{figure}
+
 \subsection{LOLIMOT}
 
 LOLIMOT nutzt dieselbe Grundidee lokaler Modelle, beschränkt Splits jedoch auf Koordinatenachsen:
@@ -187,6 +213,13 @@ Die Methode ist besonders transparent, da Regionen direkt als achsenparallele Be
 LOLIMOT arbeitet wie ein Gitterpapier: Unterteilungen erfolgen horizontal oder vertikal. HILOMOT kann zusätzlich diagonal schneiden.
 \end{analogiebox}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\textwidth]{surface_lolimot.png}
+\caption{Modellierte Antwortfläche (LOLIMOT). Im Vergleich zu HILOMOT können achsenparallele Splits bei schräg orientierten Strukturen etwas höhere Resttreppen sichtbar machen.}
+\label{fig:surface_lolimot}
+\end{figure}
+
 \subsection{MLP (Multilayer Perceptron)}
 
 Ein MLP modelliert eine globale nichtlineare Funktion über aufeinanderfolgende affine Transformationen und Aktivierungen:
@@ -197,6 +230,13 @@ Ein MLP modelliert eine globale nichtlineare Funktion über aufeinanderfolgende 
 \end{equation}
 
 Die Parameter werden per Backpropagation optimiert (im Tool über \texttt{MLPRegressor}). Das Verfahren ist leistungsfähig bei stark nichtlinearen Problemen, erfordert aber saubere Hyperparameterwahl und ausreichend Daten.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\textwidth]{surface_mlp.png}
+\caption{Modellierte Antwortfläche (MLP). Das neuronale Netz approximiert die Zielfunktion als globales, glattes Modell.}
+\label{fig:surface_mlp}
+\end{figure}
 
 \subsection{SVR (Support Vector Regression)}
 
@@ -212,6 +252,13 @@ K(\mathbf{x},\mathbf{x}') = \exp\!\left(-\gamma\lVert\mathbf{x}-\mathbf{x}'\rVer
 \end{equation}
 werden komplexe Nichtlinearitäten robust modelliert.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\textwidth]{surface_svr.png}
+\caption{Modellierte Antwortfläche (SVR mit RBF-Kernel). Der Kernel ermöglicht starke Nichtlinearitäten bei gleichzeitig kontrollierter Komplexität.}
+\label{fig:surface_svr}
+\end{figure}
+
 \subsection{GPR (Gaussian Process Regression)}
 
 GPR ist ein probabilistisches, nichtparametrisches Verfahren. Für einen neuen Punkt $\mathbf{x}_*$ ergibt sich der Erwartungswert aus:
@@ -220,6 +267,13 @@ GPR ist ein probabilistisches, nichtparametrisches Verfahren. Für einen neuen P
 \end{equation}
 
 Neben der Prädiktion kann GPR Unsicherheiten liefern. Die Standardkomplexität wächst jedoch kubisch mit der Stichprobenzahl.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\textwidth]{surface_gpr.png}
+\caption{Modellierte Antwortfläche (GPR). Gaussian Process Regression liefert eine weiche, global konsistente Approximation und kann zusätzlich Unsicherheitsintervalle ausweisen.}
+\label{fig:surface_gpr}
+\end{figure}
 
 % ============================================================
 \section{Vorteile und Nachteile im Vergleich}
@@ -292,6 +346,13 @@ Das Tool unterstützt Einzeltraining und Batch-Training (Train-All) mit Cross-Va
 \end{equation}
 und zusätzliche Kriterien (Effizienz, Interpretierbarkeit, Extrapolationsverhalten).
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\textwidth]{correlation_plot.png}
+\caption{Korrelationsplot: gemessene Zielwerte $y$ vs. Modellvorhersage $\hat{y}$. Punkte nahe der Winkelhalbierenden zeigen gute Übereinstimmung.}
+\label{fig:correlation_plot}
+\end{figure}
+
 \begin{hinweisbox}
 Die normalisierte Vergleichsansicht skaliert jedes Kriterium auf $[0,1]$, wobei 1 jeweils den besten Methodenwert repräsentiert.
 \end{hinweisbox}
@@ -308,6 +369,54 @@ Verfügbare Darstellungen in der interaktiven Canvas:
 \item Evaluation Bars,
 \item Evaluation Bars (Normalized).
 \end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\textwidth]{evaluation_bars.png}
+\caption{Evaluation Bars: absoluter Methodenvergleich über die Kriterien Accuracy, Extrapolation Linearity, Numerical Efficiency und Interpretability.}
+\label{fig:eval_bars}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\textwidth]{evaluation_bars_normalized.png}
+\caption{Normalisierte Evaluation Bars: Jeder Balken ist auf $[0,1]$ skaliert. Der Wert 1 entspricht der jeweils besten Methode je Kriterium.}
+\label{fig:eval_bars_norm}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.32\textwidth}
+  \includegraphics[width=\textwidth]{tilt_cut_01.png}
+  \caption{Schnitt 1}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.32\textwidth}
+  \includegraphics[width=\textwidth]{tilt_cut_02.png}
+  \caption{Schnitt 2}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.32\textwidth}
+  \includegraphics[width=\textwidth]{tilt_cut_03.png}
+  \caption{Schnitt 3}
+\end{subfigure}\\[6pt]
+\begin{subfigure}[b]{0.32\textwidth}
+  \includegraphics[width=\textwidth]{tilt_cut_04.png}
+  \caption{Schnitt 4}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.32\textwidth}
+  \includegraphics[width=\textwidth]{tilt_cut_05.png}
+  \caption{Schnitt 5}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.32\textwidth}
+  \includegraphics[width=\textwidth]{tilt_cut_06.png}
+  \caption{Schnitt 6}
+\end{subfigure}
+\caption{Tilt Angle Cuts: Schnitte durch die modellierten Flächen bei verschiedenen Normalkraft-Niveaus. Alle fünf Methoden werden in jeder Schnittdarstellung überlagert.}
+\label{fig:tilt_cuts}
+\end{figure}
 
 \subsection{Report- und Datenexport}
 
@@ -331,7 +440,7 @@ Unter Export stehen mehrere Formate bereit, unter anderem JSON, CSV, TXT sowie L
 \end{enumerate}
 
 \begin{merkbox}
-Es gibt keine universell beste Methode. Die beste Wahl entsteht aus Datencharakteristik, Erklärbarkeitsanforderung, Rechenbudget und Extrapolationsanforderung.
+Es gibt keine universell beste Methode. Die beste Wahl entsteht aus Datencharakteristik, Erklärbarkeitsanforderung, Rechenbudget und Extrapolationsanforderung. Der normalisierte Balkenvergleich (Abbildung~\ref{fig:eval_bars_norm}) zeigt diese Abwägungen direkt auf einen Blick.
 \end{merkbox}
 
 % ============================================================
