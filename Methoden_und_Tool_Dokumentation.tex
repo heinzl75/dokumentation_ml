@@ -1,0 +1,348 @@
+\documentclass[11pt,a4paper]{report}
+
+% ============================================================
+% PAKETE
+% ============================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{float}
+\usepackage{microtype}
+\usepackage{lmodern}
+\usepackage{setspace}
+
+% ============================================================
+% LAYOUT
+% ============================================================
+\geometry{
+a4paper,
+top=2.5cm, bottom=2.5cm,
+left=2.5cm, right=2.5cm
+}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+
+% ============================================================
+% FARBEN & BOXEN
+% ============================================================
+\definecolor{boxblue}{RGB}{220,235,250}
+\definecolor{boxgreen}{RGB}{220,245,220}
+\definecolor{codegray}{RGB}{245,245,245}
+\definecolor{codegreen}{rgb}{0,0.5,0}
+\definecolor{codepurple}{rgb}{0.5,0,0.5}
+
+\tcbuselibrary{skins, breakable}
+
+\newtcolorbox{analogiebox}[1][]{
+colback=boxblue, colframe=blue!50!black,
+title=Analogie, fonttitle=\bfseries,
+breakable, #1
+}
+
+\newtcolorbox{merkbox}[1][]{
+colback=boxgreen, colframe=green!40!black,
+title=Merksatz, fonttitle=\bfseries,
+breakable, #1
+}
+
+\newtcolorbox{hinweisbox}[1][]{
+colback=yellow!15, colframe=orange!70!black,
+title=Hinweis, fonttitle=\bfseries,
+breakable, #1
+}
+
+% ============================================================
+% LISTINGS
+% ============================================================
+\lstset{
+backgroundcolor=\color{codegray},
+basicstyle=\ttfamily\small,
+breaklines=true,
+captionpos=b,
+commentstyle=\color{codegreen},
+keywordstyle=\color{blue}\bfseries,
+stringstyle=\color{codepurple},
+numbers=left,
+numberstyle=\tiny\color{gray},
+frame=single,
+rulecolor=\color{gray!40},
+tabsize=4,
+showstringspaces=false
+}
+
+% ============================================================
+% HYPERREF
+% ============================================================
+\hypersetup{
+colorlinks=true,
+linkcolor=blue!60!black,
+urlcolor=blue!60!black,
+citecolor=blue!60!black,
+pdftitle={Methoden- und Tool-Dokumentation},
+pdfauthor={heinzl75},
+pdfsubject={HILOMOT, LOLIMOT, MLP, SVR, GPR und LMNTool Multi GUI}
+}
+
+\title{\textbf{Methoden- und Tool-Dokumentation}\\\large Ausführliche LaTeX-Fassung}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Einleitung}
+% ============================================================
+
+Diese Dokumentation beschreibt die im LMNTool verfügbaren Regressionsmethoden und die zugehörigen Tool-Funktionen im Stil einer technischen Master-Dokumentation. Ziel ist eine einheitliche, nachvollziehbare und praxisnahe Grundlage für Modellwahl, Bewertung und Export.
+
+Der Schwerpunkt liegt auf:
+\begin{itemize}
+\item den theoretischen Grundlagen je Verfahren,
+\item den Vor- und Nachteilen im direkten Vergleich,
+\item den praktischen Einstell- und Bewertungsmöglichkeiten im Tool,
+\item Empfehlungen für die methodische Auswahl in realen Anwendungsfällen.
+\end{itemize}
+
+\begin{hinweisbox}
+Alle Verfahren werden im Tool auf denselben Datenstrukturen verglichen (Zielgröße $y$ und Eingangsgrößen $x_1, x_2$), damit Kennzahlen und Visualisierungen direkt gegenüberstellbar sind.
+\end{hinweisbox}
+
+% ============================================================
+\section{Methodenüberblick}
+% ============================================================
+
+Im Tool sind folgende Verfahren enthalten:
+\begin{enumerate}
+\item HILOMOT (Hierarchical Local Model Tree)
+\item LOLIMOT (Local Linear Model Tree)
+\item MLP (Multilayer Perceptron)
+\item SVR (Support Vector Regression, RBF)
+\item GPR (Gaussian Process Regression)
+\end{enumerate}
+
+Die Bewertung erfolgt methodenübergreifend unter anderem über MSE, MAE, Korrelation, $R^2$, numerische Effizienz, Interpretierbarkeit und Extrapolations-Linearität.
+
+\begin{center}
+\begin{tabular}{p{2.8cm}p{3.8cm}p{4.2cm}p{2.8cm}}
+\toprule
+\textbf{Methode} & \textbf{Modelltyp} & \textbf{Kernidee} & \textbf{Interpretierbarkeit} \\
+\midrule
+HILOMOT & Lokales Modellnetz & Hierarchische, auch oblique Splits mit lokalen linearen Teilmodellen & Hoch \\
+LOLIMOT & Lokales Modellnetz & Achsenparallele Splits mit lokalen linearen Teilmodellen & Sehr hoch \\
+MLP & Neuronales Netz & Globale nichtlineare Approximation über Schichten & Gering \\
+SVR & Kernel-Methode & Maximum-Margin mit $\varepsilon$-insensitivem Fehler & Mittel bis gering \\
+GPR & Probabilistisches Modell & Verteilung über Funktionen mittels Kernelkovarianz & Mittel \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================
+\section{Theorieteil je Methode}
+% ============================================================
+
+\subsection{HILOMOT}
+
+HILOMOT approximiert nichtlineare Zusammenhänge durch gewichtete lokale lineare Modelle:
+\begin{equation}
+\hat{y}(\mathbf{x}) = \sum_{i=1}^{M} \Phi_i(\mathbf{z})\,\hat{y}_i(\mathbf{x}), \qquad
+\hat{y}_i(\mathbf{x}) = \boldsymbol{\theta}_i^T\tilde{\mathbf{x}}
+\end{equation}
+mit $\tilde{\mathbf{x}}=[1,x_1,\dots,x_n]^T$.
+
+Im Gegensatz zu rein achsenparallelen Bäumen erlaubt HILOMOT oblique Splits:
+\begin{equation}
+\mathbf{w}^T\mathbf{z}+b = 0
+\end{equation}
+
+Dadurch können diagonale oder gekoppelte Eingangsstrukturen oft mit weniger Blättern dargestellt werden.
+
+\begin{merkbox}
+HILOMOT liefert typischerweise eine gute Balance aus Genauigkeit und Interpretierbarkeit, weil lokale Modelle physikalisch plausibel bleiben und gleichzeitig flexible Trennungen möglich sind.
+\end{merkbox}
+
+\subsection{LOLIMOT}
+
+LOLIMOT nutzt dieselbe Grundidee lokaler Modelle, beschränkt Splits jedoch auf Koordinatenachsen:
+\begin{equation}
+\mathbf{w}=\mathbf{e}_d \Rightarrow \mathbf{w}^T\mathbf{z}+b=0
+\end{equation}
+
+Die Methode ist besonders transparent, da Regionen direkt als achsenparallele Bereiche interpretierbar sind. Bei schrägen Strukturen können jedoch mehr Teilmodelle erforderlich sein.
+
+\begin{analogiebox}
+LOLIMOT arbeitet wie ein Gitterpapier: Unterteilungen erfolgen horizontal oder vertikal. HILOMOT kann zusätzlich diagonal schneiden.
+\end{analogiebox}
+
+\subsection{MLP (Multilayer Perceptron)}
+
+Ein MLP modelliert eine globale nichtlineare Funktion über aufeinanderfolgende affine Transformationen und Aktivierungen:
+\begin{equation}
+\mathbf{h}^{(l+1)}=\sigma\bigl(W^{(l)}\mathbf{h}^{(l)}+\mathbf{b}^{(l)}\bigr),
+\qquad
+\hat{y}=W^{(L)}\mathbf{h}^{(L)}+b^{(L)}
+\end{equation}
+
+Die Parameter werden per Backpropagation optimiert (im Tool über \texttt{MLPRegressor}). Das Verfahren ist leistungsfähig bei stark nichtlinearen Problemen, erfordert aber saubere Hyperparameterwahl und ausreichend Daten.
+
+\subsection{SVR (Support Vector Regression)}
+
+SVR verwendet eine $\varepsilon$-insensitive Verlustfunktion und Komplexitätskontrolle über Margin-Maximierung:
+\begin{equation}
+\min_{\mathbf{w},b,\xi,\xi^*} \frac{1}{2}\lVert\mathbf{w}\rVert^2 + C\sum_i(\xi_i+\xi_i^*)
+\end{equation}
+unter Nebenbedingungen zur $\varepsilon$-Zone.
+
+Mit RBF-Kernel:
+\begin{equation}
+K(\mathbf{x},\mathbf{x}') = \exp\!\left(-\gamma\lVert\mathbf{x}-\mathbf{x}'\rVert^2\right)
+\end{equation}
+werden komplexe Nichtlinearitäten robust modelliert.
+
+\subsection{GPR (Gaussian Process Regression)}
+
+GPR ist ein probabilistisches, nichtparametrisches Verfahren. Für einen neuen Punkt $\mathbf{x}_*$ ergibt sich der Erwartungswert aus:
+\begin{equation}
+\hat{f}(\mathbf{x}_*) = k_*^T\bigl(K+\sigma_n^2I\bigr)^{-1}\mathbf{y}
+\end{equation}
+
+Neben der Prädiktion kann GPR Unsicherheiten liefern. Die Standardkomplexität wächst jedoch kubisch mit der Stichprobenzahl.
+
+% ============================================================
+\section{Vorteile und Nachteile im Vergleich}
+% ============================================================
+
+\begin{longtable}{p{2.4cm}p{5.1cm}p{5.1cm}}
+\toprule
+\textbf{Methode} & \textbf{Vorteile} & \textbf{Nachteile} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Methode} & \textbf{Vorteile} & \textbf{Nachteile} \\
+\midrule
+\endhead
+HILOMOT & Gute Balance aus Genauigkeit und Erklärbarkeit; oblique Splits effizient bei gekoppelten Strukturen; lokale lineare Teilmodelle physikalisch gut interpretierbar. & Mehr Parameter als einfache globale Modelle; greedy Baumwachstum; bei starkem Rauschen höherer Tuningaufwand. \\
+LOLIMOT & Sehr hohe Transparenz durch achsenparallele Regionen; robuste und stabile Modellbildung; einfache Kommunikation gegenüber Fachbereichen. & Bei diagonalen Grenzen oft mehr Blätter nötig; geringere Effizienz bei nichtachsenparallelen Mustern; datenabhängige Extrapolation lokaler Netze. \\
+MLP & Hohe funktionale Flexibilität; starke Approximation komplexer Nichtlinearitäten; oft sehr gute Fit-Werte bei ausreichenden Daten. & Geringe Interpretierbarkeit; sensitiv auf Hyperparameter und Skalierung; Overfitting-Risiko bei hoher Kapazität. \\
+SVR & Gute Generalisierung bei kleinen bis mittleren Datensätzen; robustes Lernprinzip; leistungsfähig mit RBF-Kernel. & Parameter $C$, $\gamma$, $\varepsilon$ stark wirkend; höhere Laufzeiten bei großen Datenmengen; begrenzte direkte Modellinterpretation. \\
+GPR & Fundierte probabilistische Basis; hohe Güte bei kleineren Datensätzen; Unsicherheitsabschätzung möglich. & Hoher Rechen- und Speicheraufwand für große $N$; Ergebnis stark von Kernelwahl abhängig; oft nur mit Approximationen skalierbar. \\
+\bottomrule
+\end{longtable}
+
+% ============================================================
+\section{Tool-Beschreibung: LMNTool Multi GUI}
+% ============================================================
+
+\subsection{Ziel und Einsatzbereich}
+
+LMNTool Multi GUI ist ein Vergleichswerkzeug für mehrere Regressionsverfahren auf identischem Datensatz. Es unterstützt reproduzierbare Modellentscheidungen durch standardisierte Metriken, Visualisierungen und Exportformate.
+
+\subsection{Daten und Vorverarbeitung}
+
+\begin{itemize}
+\item CSV-Import mit drei Spalten ($y$, $x_1$, $x_2$),
+\item numerische Typprüfung und Aktivierung der Trainingslogik nach validem Import,
+\item direkte Datenvorschau in 3D zur Plausibilitätsprüfung.
+\end{itemize}
+
+\subsection{Methoden-Tabs und Parameter}
+
+\begin{center}
+\begin{tabular}{p{2.4cm}p{9.0cm}}
+\toprule
+\textbf{Methode} & \textbf{Typische Kernparameter im Tool} \\
+\midrule
+HILOMOT & \texttt{max\_leafs}, \texttt{min\_samples\_per\_leaf}, \texttt{smoothness}, \texttt{demanded\_membership\_value}, \texttt{oblique} \\
+LOLIMOT & Analoge Baumparameter bei achsenparalleler Split-Strategie \\
+MLP & \texttt{hidden\_layer\_sizes}, \texttt{alpha}, \texttt{learning\_rate\_init}, \texttt{max\_iter} \\
+SVR & \texttt{C}, \texttt{gamma}, \texttt{epsilon} \\
+GPR & \texttt{length\_scale}, \texttt{noise\_level}, \texttt{n\_restarts\_optimizer}, \texttt{max\_fit\_samples} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Zusätzlich erlaubt der Decision-Weights-Tab die Gewichtung von:
+\begin{itemize}
+\item Accuracy,
+\item Extrapolation Linearity,
+\item Numerical Efficiency,
+\item Interpretability.
+\end{itemize}
+
+\subsection{Training und Bewertungslogik}
+
+Das Tool unterstützt Einzeltraining und Batch-Training (Train-All) mit Cross-Validation. Bewertet wird über:
+\begin{equation}
+\mathrm{MSE}=\frac{1}{N}\sum_{i=1}^{N}(y_i-\hat{y}_i)^2,
+\qquad
+\mathrm{MAE}=\frac{1}{N}\sum_{i=1}^{N}|y_i-\hat{y}_i|
+\end{equation}
+und zusätzliche Kriterien (Effizienz, Interpretierbarkeit, Extrapolationsverhalten).
+
+\begin{hinweisbox}
+Die normalisierte Vergleichsansicht skaliert jedes Kriterium auf $[0,1]$, wobei 1 jeweils den besten Methodenwert repräsentiert.
+\end{hinweisbox}
+
+\subsection{Visualisierungen}
+
+Verfügbare Darstellungen in der interaktiven Canvas:
+\begin{itemize}
+\item 3D Surface,
+\item Training Data 3D,
+\item Partition Map (HILOMOT/LOLIMOT),
+\item Correlation Plot,
+\item Tilt Angle Cuts,
+\item Evaluation Bars,
+\item Evaluation Bars (Normalized).
+\end{itemize}
+
+\subsection{Report- und Datenexport}
+
+Unter Export stehen mehrere Formate bereit, unter anderem JSON, CSV, TXT sowie LaTeX/PDF-Reports. Für HILOMOT existiert zusätzlich ein dedizierter Parameterexport mit Feldern wie:
+\begin{itemize}
+\item \texttt{method}, \texttt{max\_leafs}, \texttt{min\_samples\_per\_leaf}, \texttt{smoothness},
+\item \texttt{demanded\_membership\_value}, \texttt{oblique}, \texttt{trained\_leaves},
+\item \texttt{prediction\_ops}, \texttt{interpretability\_score}.
+\end{itemize}
+
+% ============================================================
+\section{Empfehlungen für die Methodenauswahl}
+% ============================================================
+
+\begin{enumerate}
+\item Wenn Transparenz und lokale physikalische Plausibilität wichtig sind: HILOMOT/LOLIMOT.
+\item Bei diagonal gekoppelten Datenstrukturen: HILOMOT mit oblique Splits bevorzugen.
+\item Bei Fokus auf reine Vorhersagegüte und geringer Interpretierbarkeitsanforderung: MLP oder SVR prüfen.
+\item Bei kleineren Datensätzen mit Unsicherheitsbedarf: GPR ist oft besonders geeignet.
+\item Für robuste Entscheidungen immer Mehrkriteriensicht nutzen (Accuracy, Linearity, Efficiency, Interpretability) und Cross-Validation einbeziehen.
+\end{enumerate}
+
+\begin{merkbox}
+Es gibt keine universell beste Methode. Die beste Wahl entsteht aus Datencharakteristik, Erklärbarkeitsanforderung, Rechenbudget und Extrapolationsanforderung.
+\end{merkbox}
+
+% ============================================================
+\section{Literaturhinweise}
+% ============================================================
+
+\begin{enumerate}
+\item Nelles, O.: \textit{Nonlinear System Identification: From Classical Approaches to Neural Networks and Fuzzy Models}.
+\item Vapnik, V.: \textit{The Nature of Statistical Learning Theory}.
+\item Rasmussen, C. E.; Williams, C. K. I.: \textit{Gaussian Processes for Machine Learning}.
+\item Goodfellow, I.; Bengio, Y.; Courville, A.: \textit{Deep Learning}.
+\end{enumerate}
+
+\end{document}
