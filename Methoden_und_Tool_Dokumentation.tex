@@ -144,8 +144,7 @@ anhand des L2ML-Fitting-Tool}\\[8pt]
 \begin{quote}
 Diese technische Dokumentation gibt eine umfassende Einf\"{u}hrung in f\"{u}nf Regressionsverfahren
 des maschinellen Lernens: HILOMOT, LOLIMOT, MLP, SVR und GPR.
-Alle Methoden werden theoretisch hergeleitet, ihre Python-Implementierung in scikit-learn sowie
-der Bezug zur MATLAB LMNTool-Toolbox erl\"{a}utert und anhand eines realen Datensatzes
+Alle Methoden werden theoretisch hergeleitet und anhand eines realen Datensatzes
 (Tilt Angle in Abh\"{a}ngigkeit von Scherkraft und Normalkraft) direkt verglichen.
 Die Dokumentation enth\"{a}lt Inhaltsverzeichnis, Abbildungsverzeichnis, Tabellenverzeichnis,
 Quellenangaben sowie eine Diskussion und Zusammenfassung.
@@ -208,13 +207,11 @@ Diese Dokumentation verfolgt vier Hauptziele:
 \begin{enumerate}
 \item \textbf{Theorie:} Die mathematischen Grundlagen aller f\"{u}nf Verfahren werden
       aus ersten Prinzipien hergeleitet, mit Bezug zu einschl\"{a}giger Fachliteratur
-      und Online-Dokumentationen (MATLAB~\cite{matlab_gpr,matlab_svr,matlab_neural},
-      scikit-learn~\cite{sklearn_mlp,sklearn_svr,sklearn_gpr}).
+      und Online-Dokumentationen (scikit-learn~\cite{sklearn_mlp,sklearn_svr,sklearn_gpr}).
 
-\item \textbf{Implementierung:} Die konkrete Umsetzung in zwei Werkzeugen wird beschrieben:
-      im Python-Tool \emph{L2ML-Fitting-Tool} (f\"{u}nf-Methoden-Vergleich) sowie in
-      \emph{MeinWindowLMNTool} (MATLAB-App-Designer-basiertes Trainingswerkzeug f\"{u}r
-      HILOMOT/LOLIMOT), einschlie\ss{}lich aller relevanten Hyperparameter und ihrer Wirkung.
+\item \textbf{Implementierung:} Die konkrete Umsetzung im Python-Tool \emph{L2ML-Fitting-Tool}
+      (f\"{u}nf-Methoden-Vergleich) wird beschrieben, einschlie\ss{}lich aller relevanten
+      Hyperparameter und ihrer Wirkung.
 
 \item \textbf{Vergleich:} Alle Methoden werden auf demselben Datensatz trainiert und mit
       einheitlichen G\"{u}tekriterien verglichen.
@@ -235,7 +232,7 @@ Der Aufbau der Dokumentation:
 \item[Kapitel~6] MLP -- Architektur, Backpropagation, Aktivierungsfunktionen.
 \item[Kapitel~7] SVR -- $\varepsilon$-Margin, Kernel-Trick, RBF-Kernel.
 \item[Kapitel~8] GPR -- Gau\ss{}prozesse, Kovarianzfunktionen, Bayes'sche Inferenz.
-\item[Kapitel~9] L2ML-Tool -- Python-Vergleichswerkzeug (L2ML-Fitting-Tool) und MATLAB-App-Designer-Werkzeug (MeinWindowLMNTool) f\"{u}r HILOMOT/LOLIMOT: Datenimport, Parameter, Visualisierungen, Export.
+\item[Kapitel~9] L2ML-Tool -- Python-Vergleichswerkzeug: Datenimport, Parameter, Visualisierungen, Export.
 \item[Kapitel~10] Vergleich aller f\"{u}nf Methoden.
 \item[Kapitel~11] Diskussion.
 \item[Kapitel~12] Zusammenfassung und Ausblick.
@@ -515,10 +512,6 @@ zu den am h\"{a}ufigsten eingesetzten Verfahren zur Identifikation nichtlinearer
 Systeme in der Regelungstechnik \cite{nelles2001}. Das Verfahren kombiniert lokale lineare
 Modelle mit einem effizienten, greedy Tree-Growing-Algorithmus.
 
-LOLIMOT ist auch in der MATLAB LMNTool-Toolbox implementiert, die als Referenz f\"{u}r das
-hier beschriebene Python-Tool dient \cite{matlab_lmnhelp}. Die MATLAB-Dokumentation beschreibt
-die Grundlagen ebenfalls unter dem Stichwort "`Local Linear Model Tree"' \cite{matlab_lmnhelp}.
-
 \section{Grundprinzip: Achsenparallele Splits}
 \label{sec:lolimot_splits}
 
@@ -576,18 +569,6 @@ benachbarter Teilmodelle \"{u}berlappen:
       aber Trennstruktur kann verschmiert werden.
 \end{itemize}
 Typische Werte: $\rho \in [0{,}1,\, 0{,}5]$.
-
-\section{Bezug zur MATLAB LMNTool-Toolbox}
-
-Die MATLAB LMNTool-Toolbox \cite{matlab_lmnhelp} bietet:
-\begin{itemize}
-\item Grafische Benutzeroberfl\"{a}che (\texttt{lolimot\_gui}),
-\item Skript-Schnittstellen (\texttt{lolimot()}, \texttt{hilomot()}),
-\item Export der gelernten Modellparameter,
-\item Visualisierungen der G\"{u}ltigkeitsfunktionen und Partitionierungskarten.
-\end{itemize}
-
-Das Python-Tool \emph{L2ML-Fitting-Tool} orientiert sich an dieser Schnittstelle.
 
 \section{Hyperparameter von LOLIMOT}
 
@@ -820,8 +801,6 @@ Backpropagation-Algorithmus durch Rumelhart, Hinton und Williams (1986)
 \cite{rumelhart1986, goodfellow2016, haykin2009}.
 
 Im L2ML-Fitting-Tool wird \texttt{MLPRegressor} aus scikit-learn verwendet \cite{sklearn_mlp, pedregosa2011}.
-MATLAB stellt \"{a}quivalente Funktionalit\"{a}t \"{u}ber die Neural Network Toolbox und
-\texttt{fitrnet} (Statistics and Machine Learning Toolbox) bereit \cite{matlab_neural}.
 
 \section{Architektur}
 \label{sec:mlp_architecture}
@@ -973,9 +952,7 @@ Regression als \emph{Support Vector Regression} (SVR) adaptiert
 \cite{vapnik1998, drucker1997, smola2004}. SVR geh\"{o}rt zu den leistungsf\"{a}higsten Verfahren
 f\"{u}r mittlere Datens\"{a}tze.
 
-MATLAB bietet SVR \"{u}ber \texttt{fitrsvm} im Statistics and Machine Learning Toolbox
-\cite{matlab_svr}. Im L2ML-Fitting-Tool wird scikit-learn's \texttt{SVR} eingesetzt
-\cite{sklearn_svr, pedregosa2011}.
+Im L2ML-Fitting-Tool wird scikit-learn's \texttt{SVR} eingesetzt \cite{sklearn_svr, pedregosa2011}.
 
 \section{Das $\varepsilon$-insensitive Verlustprinzip}
 \label{sec:svr_loss}
@@ -1044,8 +1021,7 @@ gro\ss{}es $\gamma$ = schmaler Kern, lokal wirkend.
 
 \begin{hinweisbox}
 F\"{u}r die meisten Regressionsprobleme mit unbekannter Datenstruktur ist der RBF-Kernel eine
-gute Standardwahl. MATLAB empfiehlt ebenfalls den RBF-Kernel als Standardoption
-f\"{u}r \texttt{fitrsvm} \cite{matlab_svr}.
+gute Standardwahl.
 \end{hinweisbox}
 
 \section{Antwortfl\"{a}che}
@@ -1105,8 +1081,7 @@ probabilistisches, nichtparametrisches Verfahren \cite{rasmussen2006}. Im Gegens
 HILOMOT/LOLIMOT, MLP und SVR gibt GPR eine \emph{vollst\"{a}ndige Wahrscheinlichkeitsverteilung}
 \"{u}ber m\"{o}gliche Funktionswerte aus, also neben der Punktvorhersage auch Unsicherheitsintervalle.
 
-MATLAB bietet GPR \"{u}ber \texttt{fitrgp} \cite{matlab_gpr}. Im L2ML-Fitting-Tool wird
-scikit-learn's \texttt{GaussianProcessRegressor} verwendet \cite{sklearn_gpr, pedregosa2011}.
+Im L2ML-Fitting-Tool wird scikit-learn's \texttt{GaussianProcessRegressor} verwendet \cite{sklearn_gpr, pedregosa2011}.
 
 \section{Grundkonzept: Verteilung \"{u}ber Funktionen}
 
@@ -1245,8 +1220,7 @@ Kernelparameter automatisch aus Daten gesch\"{a}tzt. & Numerische Instabilit\"{a
 \subsection{\"{U}berblick und Architektur}
 
 L2ML-Fitting-Tool ist ein Python-basiertes Vergleichswerkzeug f\"{u}r f\"{u}nf Regressionsverfahren
-auf einem einheitlichen Datensatz. Das Tool ist eine Portierung und Erweiterung der MATLAB
-LMNTool-Toolbox \cite{matlab_lmnhelp} und verwendet f\"{u}r HILOMOT/LOLIMOT eine
+auf einem einheitlichen Datensatz. Es verwendet f\"{u}r HILOMOT/LOLIMOT eine
 Eigenimplementierung sowie f\"{u}r MLP, SVR und GPR scikit-learn \cite{pedregosa2011}.
 
 \subsection{Datenimport und Vorverarbeitung}
@@ -1391,322 +1365,7 @@ Exportformate:
 \end{itemize}
 
 F\"{u}r HILOMOT/LOLIMOT: Dedizierter Parameterexport mit allen Baumknoten f\"{u}r direkte
-Einbettung in Echtzeitsysteme (z.\,B.\ MATLAB/Simulink).
-
-% ============================================================
-\section{MeinWindowLMNTool (MATLAB)}
-
-\subsection{\"{U}berblick und Einordnung}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.92\textwidth]{MeinWindowLMNTool.png}
-\caption{Hauptfenster von MeinWindowLMNTool: Steuerbereich (links) mit Methoden-\,/\,Parameterwahl,
-Plotbereich (Mitte/rechts) mit 3D-Antwortfl\"{a}che und Partitionierungskarte sowie
-Ergebnisbereich (unten) mit G\"{u}tekennzahlen und Exportbuttons.}
-\label{fig:meinwindow_gui}
-\end{figure}
-
-\emph{MeinWindowLMNTool} ist eine interaktive, MATLAB-basierte Benutzeroberfl\"{a}che
-f\"{u}r die Identifikation nichtlinearer Systeme mittels lokaler Modellnetze.
-Sie baut direkt auf der MATLAB LMNTool-Toolbox (Version~1.5.2.1) der Universit\"{a}t
-Siegen auf \cite{matlab_lmnhelp, matlab_lmn} und kapselt deren Kernfunktionalit\"{a}t
--- HILOMOT- und LOLIMOT-Training, Visualisierung sowie Parameterexport -- in einer
-\emph{App-Designer}-Anwendung mit einer einzigen, \"{u}bersichtlichen Fensteroberfl\"{a}che.
-
-\begin{merkbox}
-\textbf{Einordnung:} W\"{a}hrend das \emph{L2ML-Fitting-Tool} (Abschnitt~\ref{sec:l2ml_fitting}) ein
-Python-basiertes Vergleichswerkzeug f\"{u}r f\"{u}nf Regressionsverfahren ist, fokussiert
-\emph{MeinWindowLMNTool} vollst\"{a}ndig auf HILOMOT und LOLIMOT im MATLAB-\"{O}kosystem.
-Es richtet sich prim\"{a}r an Anwender, die bereits mit MATLAB vertraut sind oder eine
-enge Integration mit Simulink/Control-Toolboxen ben\"{o}tigen.
-\end{merkbox}
-
-\begin{table}[H]
-\centering
-\caption{Gegen\"{u}berstellung: MeinWindowLMNTool vs.\ L2ML-Fitting-Tool}
-\label{tab:tools_vergleich}
-\begin{tabular}{p{4.0cm}p{5.2cm}p{5.2cm}}
-\toprule
-\textbf{Merkmal} & \textbf{MeinWindowLMNTool} & \textbf{L2ML-Fitting-Tool} \\
-\midrule
-Sprache / Plattform & MATLAB (App Designer) & Python (tkinter/matplotlib) \\
-Unterst\"{u}tzte Methoden & HILOMOT, LOLIMOT & HILOMOT, LOLIMOT, MLP, SVR, GPR \\
-Zielgruppe & MATLAB-Nutzer, Simulink-Integration & Plattform\"{u}bergreifend, Open-Source \\
-Lizenz & MATLAB-Lizenz erforderlich & Python, kostenlos \\
-Export & \texttt{.mat}, JSON, Text & JSON, CSV, TXT, LaTeX/PDF \\
-Unsicherheitsangabe & Nein & Nur \"{u}ber GPR \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\subsection{Programmaufbau und Startvoraussetzungen}
-\label{sec:meinwindow_start}
-
-\textbf{Voraussetzungen:}
-\begin{itemize}
-\item MATLAB R2020b oder neuer (App Designer erst ab R2016a verf\"{u}gbar).
-\item LMNTool-Toolbox v1.5.2.1 \cite{matlab_lmn} im MATLAB-Suchpfad (\texttt{addpath}).
-\item Statistics and Machine Learning Toolbox (f\"{u}r Basisfunktionen).
-\end{itemize}
-
-\textbf{Starten der Anwendung:}
-
-\begin{lstlisting}[language=matlab, caption={MeinWindowLMNTool starten}]
-% Option 1: Direkt aus dem MATLAB Command Window
-run('MeinWindowLMNTool.mlapp')
-
-% Option 2: Doppelklick auf MeinWindowLMNTool.mlapp im
-%            MATLAB Current Folder Browser
-\end{lstlisting}
-
-Nach dem Start \"{o}ffnet sich das Hauptfenster mit drei Hauptbereichen:
-\begin{enumerate}
-\item \textbf{Steuerbereich (links):} Dateiladen, Methoden- und Parameterwahl, Trainingsstart.
-\item \textbf{Plotbereich (Mitte/rechts):} Visualisierungen (3D-Fl\"{a}che, Partitionierungskarte,
-      Korrelationsplot, Schnittdarstellungen).
-\item \textbf{Ergebnisbereich (unten):} G\"{u}tekennzahlen, Modellzusammenfassung und
-      Exportbuttons.
-\end{enumerate}
-
-\subsection{Datenimport}
-\label{sec:meinwindow_daten}
-
-\emph{MeinWindowLMNTool} akzeptiert Datens\"{a}tze als CSV-Datei im selben 3-spaltigen Format
-wie das Python-Tool:
-\begin{itemize}
-\item Spalte~1: Zielgr\"{o}\ss{}e $y$ (z.\,B.\ Tilt Angle),
-\item Spalte~2: Eingangsgr\"{o}\ss{}e $x_1$ (z.\,B.\ Shear Force),
-\item Spalte~3: Eingangsgr\"{o}\ss{}e $x_2$ (z.\,B.\ Normal Force).
-\end{itemize}
-Trennzeichen werden automatisch erkannt (\texttt{;}, \texttt{,}, Tab).
-Zus\"{a}tzlich k\"{o}nnen Daten direkt als MATLAB-Variable (\texttt{.mat}-Datei) \"{u}bergeben werden.
-
-\begin{lstlisting}[language=matlab, caption={Daten programmatisch laden (Skript-Modus)}]
-% Trainingsdaten laden
-data = readmatrix('tiltangle_data.csv');
-y  = data(:,1);   % Tilt Angle
-x1 = data(:,2);   % Shear Force
-x2 = data(:,3);   % Normal Force
-
-% Datenmenge X fuer L2ML-Fitting-Tool
-X_train = [x1, x2];
-\end{lstlisting}
-
-Nach dem Import zeigt das Tool eine 3D-Vorschau der Rohdaten analog zu
-Abbildung~\ref{fig:training_data} (Kapitel~1), um Ausrei\ss{}er und L\"{u}cken
-visuell zu pr\"{u}fen, bevor das Training gestartet wird.
-
-\subsection{Methoden- und Parameterwahl}
-\label{sec:meinwindow_params}
-
-Im Steuerbereich w\"{a}hlt der Anwender \"{u}ber ein \texttt{uiswitch}-Element zwischen
-\textbf{LOLIMOT} (achsenparallel) und \textbf{HILOMOT} (oblique Splits).
-Alle relevanten Hyperparameter k\"{o}nnen \"{u}ber Spinner-Felder (\texttt{uispinner})
-und Checkboxen (\texttt{uicheckbox}) eingestellt werden.
-
-\begin{table}[H]
-\centering
-\caption{Trainingsparameter in MeinWindowLMNTool}
-\label{tab:meinwindow_params}
-\begin{tabular}{p{4.5cm}p{1.8cm}p{1.5cm}p{6.5cm}}
-\toprule
-\textbf{Parameter} & \textbf{Typ} & \textbf{Standard} & \textbf{Beschreibung} \\
-\midrule
-Max Leaves & int & 15 & Maximale Bl\"{a}tteranzahl (Modellkomplexit\"{a}t). \\
-Min Samples per Leaf & int & 6 & Mindestanzahl effektiver Trainingspunkte je Blatt. \\
-Smoothness ($\rho$) & float & 0{,}8 & \"{U}berlappung der Sigmoid-G\"{u}ltigkeitsregionen. \\
-Membership Value ($\mu^*$) & float & 0{,}4 & Mindest-G\"{u}ltigkeitswert f\"{u}r WLS-Einbeziehung. \\
-Oblique Splits & bool & an & \texttt{an} = HILOMOT; \texttt{aus} = LOLIMOT. \\
-Kreuzvalidierung & bool & aus & Aktiviert $k$-fache CV zur Strukturwahl. \\
-$k$ (CV-Folds) & int & 5 & Anzahl der Folds bei Kreuzvalidierung. \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{hinweisbox}
-\textbf{Empfehlung:} F\"{u}r komplexe, diagonale Datenstrukturen (wie den Tilt-Angle-Datensatz)
-empfiehlt sich \texttt{Oblique Splits~=~an} (HILOMOT) mit \texttt{Max Leaves~=~10--15} und
-\texttt{Smoothness~=~0{,}4--0{,}8}. F\"{u}r achsenparallele, weniger gekoppelte Daten reicht
-LOLIMOT oft schon mit \texttt{Max Leaves~=~8--12}.
-\end{hinweisbox}
-
-\subsection{Training}
-\label{sec:meinwindow_training}
-
-Das Training wird durch Klick auf den \textbf{Train}-Button ausgel\"{o}st.
-Der Trainingsfortschritt wird in einer Fortschrittsanzeige (\texttt{uiprogressdlg}) angezeigt,
-sodass die Oberfl\"{a}che w\"{a}hrend des Baumwachstums reaktionsf\"{a}hig bleibt.
-
-Intern ruft die App die LMNTool-Kernfunktion auf:
-
-\begin{lstlisting}[language=matlab, caption={Interner Aufruf der LMNTool-Trainingsfunktion}]
-% HILOMOT-Training (intern in der App-Callback-Funktion)
-opt = lmntool_options();
-opt.maxLeafs       = app.MaxLeavesSpinner.Value;
-opt.smoothness     = app.SmoothnessSpinner.Value;
-opt.oblique        = app.ObliqueSwitchValue;
-opt.minSamplesLeaf = app.MinSamplesSpinner.Value;
-opt.membershipVal  = app.MembershipSpinner.Value;
-
-model = hilomot(X_train, y, opt);   % LMNTool-Funktion
-\end{lstlisting}
-
-Nach dem Training werden direkt im Ergebnisbereich ausgegeben:
-
-\begin{center}
-\begin{tabular}{p{3.0cm}p{5.0cm}p{5.5cm}}
-\toprule
-\textbf{Metrik} & \textbf{Formel} & \textbf{Beschreibung} \\
-\midrule
-MSE & $\frac{1}{N}\sum(y_i-\hat{y}_i)^2$ & Mittlerer quadratischer Fehler \\
-MAE & $\frac{1}{N}\sum|y_i-\hat{y}_i|$   & Mittlerer absoluter Fehler \\
-RMSE & $\sqrt{\text{MSE}}$ & Wurzel des MSE (in Einheiten von $y$) \\
-$R^2$ & $1-\mathrm{SS_{res}}/\mathrm{SS_{tot}}$ & Bestimmtheitsma\ss{} \\
-Lokale Modelle & $M$ & Anzahl Bl\"{a}tter im Baum \\
-Trainingszeit & $t$ [s] & Rechenaufwand des Baumwachstums \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\subsection{Visualisierungen}
-\label{sec:meinwindow_vis}
-
-\emph{MeinWindowLMNTool} stellt dieselben zentralen Visualisierungen bereit, die auch aus dem
-Python-Tool bekannt sind (Kapitel~\ref{fig:hilomot_combined}, \ref{fig:correlation_plot}):
-
-\begin{table}[H]
-\centering
-\caption{Visualisierungstypen in MeinWindowLMNTool}
-\label{tab:meinwindow_vis}
-\begin{tabular}{p{4.0cm}p{9.5cm}}
-\toprule
-\textbf{Plot-Typ} & \textbf{Beschreibung} \\
-\midrule
-3D Surface & Vorhersagefl\"{a}che $\hat{y}(x_1, x_2)$ mit eingebetteten Trainingspunkten
-             (MATLAB \texttt{surf} + \texttt{scatter3}). \\
-Partition Map & 2D-Partitionierungsplot mit eingezeichneten Trennhyperebenen und
-                farbcodierten G\"{u}ltigkeitsbereichen (\texttt{pcolor}). \\
-Correlation Plot & Streudiagramm $y$ vs.\ $\hat{y}$ mit Winkelhalbierender zur
-                   Diagnose von Bias. \\
-Tilt Cuts & Schnitte $\hat{y}(x_1)$ bei verschiedenen Niveaus $x_2 = \text{const}$.
-            Direkt vergleichbar mit Abb.~\ref{fig:tilt_cuts}. \\
-Validity Functions & 2D-Darstellung der einzelnen G\"{u}ltigkeitsfunktionen $\Phi_i(x_1, x_2)$
-                     f\"{u}r jedes Blatt. Einzigartig unter den beiden Tools. \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Ein besonderes Alleinstellungsmerkmal von \emph{MeinWindowLMNTool} gegen\"{u}ber dem
-Python-Pendant ist die \textbf{Validity-Function-Visualisierung}: F\"{u}r jedes Blatt~$i$
-wird $\Phi_i(x_1, x_2)$ als Oberfl\"{a}che geplottet (Gleichung~\ref{eq:validity_weight}).
-Diese Darstellung macht transparent, welche Datenpunkte durch welches lokale Modell
-beschrieben werden -- ein wesentlicher Beitrag zur Interpretierbarkeit.
-
-\begin{lstlisting}[language=matlab, caption={Validity-Function-Plot f\"{u}r Blatt i (Skript-Modus)}]
-% Eingangsraster
-[x1g, x2g] = meshgrid(linspace(min(x1),max(x1),60), ...
-                       linspace(min(x2),max(x2),60));
-Xgrid = [x1g(:), x2g(:)];
-
-% Gueltigkeitsgewichte aus dem Modell abrufen
-Phi = lmntool_validity(model, Xgrid);   % N_grid x M Matrix
-
-% Blatt i plotten
-figure;
-surf(x1g, x2g, reshape(Phi(:,i), size(x1g)));
-xlabel('Shear Force'); ylabel('Normal Force');
-zlabel(['\Phi_' num2str(i)]);
-title(['Gueltigkeitsfunktion -- Blatt ' num2str(i)]);
-\end{lstlisting}
-
-\subsection{Export und Integration}
-\label{sec:meinwindow_export}
-
-\emph{MeinWindowLMNTool} bietet folgende Exportoptionen:
-
-\begin{table}[H]
-\centering
-\caption{Exportformate in MeinWindowLMNTool}
-\label{tab:meinwindow_export}
-\begin{tabular}{p{3.0cm}p{10.5cm}}
-\toprule
-\textbf{Format} & \textbf{Inhalt} \\
-\midrule
-\texttt{.mat} & Vollst\"{a}ndige MATLAB-Modellstruktur: Baum, Knotenparameter, Kappa-Werte,
-                Gewichte. Direkt ladbar mit \texttt{load('model.mat')}. \\
-JSON & Maschinenlesbare Beschreibung aller Baumknoten (kompatibel mit Python-Tool). \\
-Text & Lesbare Zusammenfassung: Metriken, Baumstruktur, lokale Modellkoeffizienten. \\
-Simulink-Block & Erzeugung eines parametrisierten \texttt{Interpreted MATLAB Function}-Blocks
-                 f\"{u}r direkte Einbettung in Simulink-Modelle. \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\textbf{Simulink-Integration:} Der automatisch erzeugte Simulink-Block \"{u}bernimmt die gelernten
-Modellparameter (Gewichte, Bias, Kappa) und bildet die LMN-Vorhersagefunktion (Gleichung~\ref{eq:lmn})
-direkt in Echtzeit ab. Dies erm\"{o}glicht die direkte Nutzung des trainierten Modells
-in Hardware-in-the-Loop (HiL)-Umgebungen oder Steuerger\"{a}te-Prototypen.
-
-\begin{lstlisting}[language=matlab, caption={Modell nach Training laden und auswerten}]
-% Gespeichertes Modell laden
-load('hilomot_tiltangle_model.mat', 'model');
-
-% Vorhersage fuer neuen Datenpunkt
-x_new = [0.35, 1.2];   % [Shear Force, Normal Force]
-y_hat = lmntool_predict(model, x_new);
-
-fprintf('Vorhergesagter Tilt Angle: %.4f\n', y_hat);
-\end{lstlisting}
-
-\subsection{Vergleich mit dem Python L2ML-Fitting-Tool}
-\label{sec:meinwindow_vergleich_python}
-
-Beide Werkzeuge erg\"{a}nzen sich sinnvoll und richten sich an unterschiedliche Anwendergruppen:
-
-\begin{description}
-\item[MeinWindowLMNTool (MATLAB):] Ideal f\"{u}r MATLAB-Nutzer in Industrie und Hochschule,
-    besonders wenn eine direkte Simulink-Integration oder Anbindung an MATLAB-Workflows
-    gew\"{u}nscht ist. St\"{a}rken: Validity-Function-Visualisierung, Simulink-Export,
-    native MATLAB-Datenstrukturen.
-
-\item[L2ML-Fitting-Tool (Python):] Ideal f\"{u}r plattform\"{u}bergreifenden Einsatz und
-    wenn auch MLP, SVR und GPR verglichen werden sollen. St\"{a}rken: Mehr Methoden,
-    normierter Mehrkriterienscore, kostenlos nutzbar.
-\end{description}
-
-\begin{table}[H]
-\centering
-\caption{Funktionsumfang im Direktvergleich}
-\label{tab:tools_funktionen}
-\begin{tabular}{p{6.0cm}p{3.2cm}p{3.2cm}}
-\toprule
-\textbf{Funktion} & \textbf{MeinWindowLMNTool} & \textbf{L2ML-Fitting-Tool} \\
-\midrule
-HILOMOT-Training & \checkmark & \checkmark \\
-LOLIMOT-Training & \checkmark & \checkmark \\
-MLP / SVR / GPR & -- & \checkmark \\
-3D Antwortfl\"{a}che & \checkmark & \checkmark \\
-Partitionierungskarte & \checkmark & \checkmark \\
-Korrelationsplot & \checkmark & \checkmark \\
-Tilt Angle Cuts & \checkmark & \checkmark \\
-Validity-Functions-Plot & \checkmark & -- \\
-Kreuzvalidierung (GUI) & \checkmark & -- \\
-Mehrkriterienscore & -- & \checkmark \\
-Simulink-Export & \checkmark & -- \\
-JSON-Export & \checkmark & \checkmark \\
-\texttt{.mat}-Export & \checkmark & -- \\
-LaTeX/PDF-Report & -- & \checkmark \\
-MATLAB-Lizenz erforderlich & Ja & Nein \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{merkbox}
-F\"{u}r reine HILOMOT/LOLIMOT-Anwendungen in MATLAB-Umgebungen ist \emph{MeinWindowLMNTool}
-die direktere Wahl. F\"{u}r einen \"{u}bergreifenden Methodenvergleich (inkl.\ MLP, SVR, GPR)
-bietet das \emph{L2ML-Fitting-Tool} den vollst\"{a}ndigeren Rahmen.
-\end{merkbox}
+Einbettung in Echtzeitsysteme.
 
 % ============================================================
 \chapter{Vergleich der Methoden}
@@ -1863,8 +1522,7 @@ Alle Methoden weisen eine erhebliche Empfindlichkeit gegen\"{u}ber der Hyperpara
 \item HILOMOT/LOLIMOT: \texttt{max\_leafs} und \texttt{smoothness} entscheiden \"{u}ber den
       Bias-Varianz-Kompromiss. Zu viele Bl\"{a}tter f\"{u}hren zu Overfitting.
 \item MLP: Netzgr\"{o}\ss{}e, Lernrate und $\alpha$ sind entscheidend; Grid-Search aufw\"{a}ndig.
-\item SVR: $C$, $\gamma$ und $\varepsilon$ interagieren stark; MATLAB empfiehlt Kreuzvalidierung
-      \cite{matlab_svr}.
+\item SVR: $C$, $\gamma$ und $\varepsilon$ interagieren stark; Kreuzvalidierung empfiehlt sich zur Parameteroptimierung.
 \item GPR: Kernelparameter werden automatisch gesch\"{a}tzt, Anzahl Neustarts beeinflusst die
       Qualit\"{a}t.
 \end{itemize}
