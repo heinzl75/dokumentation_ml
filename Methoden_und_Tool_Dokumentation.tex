@@ -235,11 +235,10 @@ Der Aufbau der Dokumentation:
 \item[Kapitel~6] MLP -- Architektur, Backpropagation, Aktivierungsfunktionen.
 \item[Kapitel~7] SVR -- $\varepsilon$-Margin, Kernel-Trick, RBF-Kernel.
 \item[Kapitel~8] GPR -- Gau\ss{}prozesse, Kovarianzfunktionen, Bayes'sche Inferenz.
-\item[Kapitel~9] L2ML-Fitting-Tool -- Python-Vergleichswerkzeug, Datenimport, Parameter, Visualisierungen, Export.
-\item[Kapitel~10] MeinWindowLMNTool -- MATLAB-App-Designer-Werkzeug f\"{u}r HILOMOT/LOLIMOT: Aufbau, Bedienung, Visualisierungen, Export und Einordnung.
-\item[Kapitel~11] Vergleich aller f\"{u}nf Methoden.
-\item[Kapitel~12] Diskussion.
-\item[Kapitel~13] Zusammenfassung und Ausblick.
+\item[Kapitel~9] L2ML-Tool -- Python-Vergleichswerkzeug (L2ML-Fitting-Tool) und MATLAB-App-Designer-Werkzeug (MeinWindowLMNTool) f\"{u}r HILOMOT/LOLIMOT: Datenimport, Parameter, Visualisierungen, Export.
+\item[Kapitel~10] Vergleich aller f\"{u}nf Methoden.
+\item[Kapitel~11] Diskussion.
+\item[Kapitel~12] Zusammenfassung und Ausblick.
 \end{description}
 
 \section{Verwendeter Datensatz}
@@ -1236,17 +1235,21 @@ Kernelparameter automatisch aus Daten gesch\"{a}tzt. & Numerische Instabilit\"{a
 \end{table}
 
 % ============================================================
-\chapter{L2ML-Fitting-Tool}
+\chapter{L2ML-Tool}
 % ============================================================
 
-\section{\"{U}berblick und Architektur}
+\section{L2ML-Fitting-Tool (Python)}
+\label{sec:l2ml_fitting}
+% ============================================================
+
+\subsection{\"{U}berblick und Architektur}
 
 L2ML-Fitting-Tool ist ein Python-basiertes Vergleichswerkzeug f\"{u}r f\"{u}nf Regressionsverfahren
 auf einem einheitlichen Datensatz. Das Tool ist eine Portierung und Erweiterung der MATLAB
 LMNTool-Toolbox \cite{matlab_lmnhelp} und verwendet f\"{u}r HILOMOT/LOLIMOT eine
 Eigenimplementierung sowie f\"{u}r MLP, SVR und GPR scikit-learn \cite{pedregosa2011}.
 
-\section{Datenimport und Vorverarbeitung}
+\subsection{Datenimport und Vorverarbeitung}
 
 CSV-Import mit Spaltenreihenfolge $y$, $x_1$, $x_2$. Nach dem Import:
 \begin{itemize}
@@ -1264,7 +1267,7 @@ unerwartete Strukturen.}
 \label{fig:data_preview_tool}
 \end{figure}
 
-\section{Methoden-Tabs und Parametrierung}
+\subsection{Methoden-Tabs und Parametrierung}
 
 Jeder Methoden-Tab enth\"{a}lt Eingabefelder f\"{u}r alle methodenspezifischen Hyperparameter
 (vgl.\ Tab.~\ref{tab:all_params}), einen \texttt{Train}-Button und eine Statusanzeige mit
@@ -1290,7 +1293,7 @@ GPR     & \texttt{length\_scale}, \texttt{noise\_level}, \texttt{n\_restarts\_op
 \end{tabular}
 \end{table}
 
-\section{Training und Bewertungslogik}
+\subsection{Training und Bewertungslogik}
 
 \textbf{Trainingsmodi:}
 \begin{itemize}
@@ -1321,7 +1324,7 @@ Die normalisierte Vergleichsansicht skaliert jedes Kriterium auf $[0,1]$, wobei 
 dem besten Methodenwert entspricht.
 \end{hinweisbox}
 
-\section{Visualisierungen}
+\subsection{Visualisierungen}
 
 \begin{figure}[H]
 \centering
@@ -1377,7 +1380,7 @@ Interpolation und Extrapolationsverhalten.}
 \label{fig:tilt_cuts}
 \end{figure}
 
-\section{Report- und Datenexport}
+\subsection{Report- und Datenexport}
 
 Exportformate:
 \begin{itemize}
@@ -1391,10 +1394,18 @@ F\"{u}r HILOMOT/LOLIMOT: Dedizierter Parameterexport mit allen Baumknoten f\"{u}
 Einbettung in Echtzeitsysteme (z.\,B.\ MATLAB/Simulink).
 
 % ============================================================
-\chapter{MeinWindowLMNTool}
-% ============================================================
+\section{MeinWindowLMNTool (MATLAB)}
 
-\section{\"{U}berblick und Einordnung}
+\subsection{\"{U}berblick und Einordnung}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{MeinWindowLMNTool.png}
+\caption{Hauptfenster von MeinWindowLMNTool: Steuerbereich (links) mit Methoden-\,/\,Parameterwahl,
+Plotbereich (Mitte/rechts) mit 3D-Antwortfl\"{a}che und Partitionierungskarte sowie
+Ergebnisbereich (unten) mit G\"{u}tekennzahlen und Exportbuttons.}
+\label{fig:meinwindow_gui}
+\end{figure}
 
 \emph{MeinWindowLMNTool} ist eine interaktive, MATLAB-basierte Benutzeroberfl\"{a}che
 f\"{u}r die Identifikation nichtlinearer Systeme mittels lokaler Modellnetze.
@@ -1404,7 +1415,7 @@ Siegen auf \cite{matlab_lmnhelp, matlab_lmn} und kapselt deren Kernfunktionalit\
 \emph{App-Designer}-Anwendung mit einer einzigen, \"{u}bersichtlichen Fensteroberfl\"{a}che.
 
 \begin{merkbox}
-\textbf{Einordnung:} W\"{a}hrend das \emph{L2ML-Fitting-Tool} (Kapitel~9) ein
+\textbf{Einordnung:} W\"{a}hrend das \emph{L2ML-Fitting-Tool} (Abschnitt~\ref{sec:l2ml_fitting}) ein
 Python-basiertes Vergleichswerkzeug f\"{u}r f\"{u}nf Regressionsverfahren ist, fokussiert
 \emph{MeinWindowLMNTool} vollst\"{a}ndig auf HILOMOT und LOLIMOT im MATLAB-\"{O}kosystem.
 Es richtet sich prim\"{a}r an Anwender, die bereits mit MATLAB vertraut sind oder eine
@@ -1429,7 +1440,7 @@ Unsicherheitsangabe & Nein & Nur \"{u}ber GPR \\
 \end{tabular}
 \end{table}
 
-\section{Programmaufbau und Startvoraussetzungen}
+\subsection{Programmaufbau und Startvoraussetzungen}
 \label{sec:meinwindow_start}
 
 \textbf{Voraussetzungen:}
@@ -1458,7 +1469,7 @@ Nach dem Start \"{o}ffnet sich das Hauptfenster mit drei Hauptbereichen:
       Exportbuttons.
 \end{enumerate}
 
-\section{Datenimport}
+\subsection{Datenimport}
 \label{sec:meinwindow_daten}
 
 \emph{MeinWindowLMNTool} akzeptiert Datens\"{a}tze als CSV-Datei im selben 3-spaltigen Format
@@ -1486,7 +1497,7 @@ Nach dem Import zeigt das Tool eine 3D-Vorschau der Rohdaten analog zu
 Abbildung~\ref{fig:training_data} (Kapitel~1), um Ausrei\ss{}er und L\"{u}cken
 visuell zu pr\"{u}fen, bevor das Training gestartet wird.
 
-\section{Methoden- und Parameterwahl}
+\subsection{Methoden- und Parameterwahl}
 \label{sec:meinwindow_params}
 
 Im Steuerbereich w\"{a}hlt der Anwender \"{u}ber ein \texttt{uiswitch}-Element zwischen
@@ -1520,7 +1531,7 @@ empfiehlt sich \texttt{Oblique Splits~=~an} (HILOMOT) mit \texttt{Max Leaves~=~1
 LOLIMOT oft schon mit \texttt{Max Leaves~=~8--12}.
 \end{hinweisbox}
 
-\section{Training}
+\subsection{Training}
 \label{sec:meinwindow_training}
 
 Das Training wird durch Klick auf den \textbf{Train}-Button ausgel\"{o}st.
@@ -1558,7 +1569,7 @@ Trainingszeit & $t$ [s] & Rechenaufwand des Baumwachstums \\
 \end{tabular}
 \end{center}
 
-\section{Visualisierungen}
+\subsection{Visualisierungen}
 \label{sec:meinwindow_vis}
 
 \emph{MeinWindowLMNTool} stellt dieselben zentralen Visualisierungen bereit, die auch aus dem
@@ -1609,7 +1620,7 @@ zlabel(['\Phi_' num2str(i)]);
 title(['Gueltigkeitsfunktion -- Blatt ' num2str(i)]);
 \end{lstlisting}
 
-\section{Export und Integration}
+\subsection{Export und Integration}
 \label{sec:meinwindow_export}
 
 \emph{MeinWindowLMNTool} bietet folgende Exportoptionen:
@@ -1648,7 +1659,7 @@ y_hat = lmntool_predict(model, x_new);
 fprintf('Vorhergesagter Tilt Angle: %.4f\n', y_hat);
 \end{lstlisting}
 
-\section{Vergleich mit dem Python L2ML-Fitting-Tool}
+\subsection{Vergleich mit dem Python L2ML-Fitting-Tool}
 \label{sec:meinwindow_vergleich_python}
 
 Beide Werkzeuge erg\"{a}nzen sich sinnvoll und richten sich an unterschiedliche Anwendergruppen:
