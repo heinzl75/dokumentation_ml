@@ -47,7 +47,7 @@ left=3.0cm, right=2.5cm
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small\nouppercase{\leftmark}}
-\fancyhead[R]{\small\textit{LMNTool -- Methodendokumentation}}
+\fancyhead[R]{\small\textit{L2ML-Fitting-Tool -- Methodendokumentation}}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 
@@ -112,7 +112,7 @@ urlcolor=blue!60!black,
 citecolor=blue!60!black,
 pdftitle={Vergleich von Regressionsverfahren im maschinellen Lernen},
 pdfauthor={heinzl75},
-pdfsubject={HILOMOT, LOLIMOT, MLP, SVR, GPR, LMNTool}
+pdfsubject={HILOMOT, LOLIMOT, MLP, SVR, GPR, L2ML-Fitting-Tool}
 }
 
 \title{%
@@ -122,7 +122,7 @@ pdfsubject={HILOMOT, LOLIMOT, MLP, SVR, GPR, LMNTool}
 im maschinellen Lernen}\\[8pt]
 {\large HILOMOT, LOLIMOT, MLP, SVR und GPR\,--\\[4pt]
 Theorie, Implementierung und Vergleich\\
-anhand des LMNTool Multi GUI}\\[8pt]
+anhand des L2ML-Fitting-Tool}\\[8pt]
 \rule{\linewidth}{0.5mm}\\[20pt]
 {\large Technische Dokumentation}
 }
@@ -153,7 +153,7 @@ Quellenangaben sowie eine Diskussion und Zusammenfassung.
 
 \vfill
 \begin{center}
-{\small Erstellt mit \LaTeX{} und Biber/biblatex. Abbildungen aus dem LMNTool Multi GUI.}
+{\small Erstellt mit \LaTeX{} und Biber/biblatex. Abbildungen aus dem L2ML-Fitting-Tool.}
 \end{center}
 
 \clearpage
@@ -198,7 +198,7 @@ stark nichtlineare Kennlinien \cite{nelles2001, murray1998}.
 Neben den LMN-Verfahren werden in dieser Dokumentation drei weitere etablierte Methoden
 untersucht: das Multilayer Perceptron (MLP) als Vertreter der neuronalen Netze \cite{goodfellow2016},
 die Support Vector Regression (SVR) \cite{vapnik1998} und die Gaussian Process Regression (GPR)
-\cite{rasmussen2006}. Alle f\"{u}nf Methoden sind im \emph{LMNTool Multi GUI} implementiert
+\cite{rasmussen2006}. Alle f\"{u}nf Methoden sind im \emph{L2ML-Fitting-Tool} implementiert
 und k\"{o}nnen direkt miteinander verglichen werden.
 
 \section{Ziel und Aufbau der Dokumentation}
@@ -212,7 +212,7 @@ Diese Dokumentation verfolgt vier Hauptziele:
       scikit-learn~\cite{sklearn_mlp,sklearn_svr,sklearn_gpr}).
 
 \item \textbf{Implementierung:} Die konkrete Umsetzung in zwei Werkzeugen wird beschrieben:
-      im Python-Tool \emph{LMNTool Multi GUI} (f\"{u}nf-Methoden-Vergleich) sowie in
+      im Python-Tool \emph{L2ML-Fitting-Tool} (f\"{u}nf-Methoden-Vergleich) sowie in
       \emph{MeinWindowLMNTool} (MATLAB-App-Designer-basiertes Trainingswerkzeug f\"{u}r
       HILOMOT/LOLIMOT), einschlie\ss{}lich aller relevanten Hyperparameter und ihrer Wirkung.
 
@@ -235,7 +235,7 @@ Der Aufbau der Dokumentation:
 \item[Kapitel~6] MLP -- Architektur, Backpropagation, Aktivierungsfunktionen.
 \item[Kapitel~7] SVR -- $\varepsilon$-Margin, Kernel-Trick, RBF-Kernel.
 \item[Kapitel~8] GPR -- Gau\ss{}prozesse, Kovarianzfunktionen, Bayes'sche Inferenz.
-\item[Kapitel~9] LMNTool Multi GUI -- Python-Vergleichswerkzeug, Datenimport, Parameter, Visualisierungen, Export.
+\item[Kapitel~9] L2ML-Fitting-Tool -- Python-Vergleichswerkzeug, Datenimport, Parameter, Visualisierungen, Export.
 \item[Kapitel~10] MeinWindowLMNTool -- MATLAB-App-Designer-Werkzeug f\"{u}r HILOMOT/LOLIMOT: Aufbau, Bedienung, Visualisierungen, Export und Einordnung.
 \item[Kapitel~11] Vergleich aller f\"{u}nf Methoden.
 \item[Kapitel~12] Diskussion.
@@ -256,7 +256,7 @@ Der in dieser Dokumentation durchg\"{a}ngig verwendete Datensatz beschreibt den 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.68\textwidth]{training_data_3d.png}
-\caption{3D-Ansicht der Trainingsdaten nach dem CSV-Import im LMNTool. Die Zielgr\"{o}\ss{}e $y$
+\caption{3D-Ansicht der Trainingsdaten nach dem CSV-Import im L2ML-Fitting-Tool. Die Zielgr\"{o}\ss{}e $y$
 (Tilt Angle) ist als farbcodierte H\"{o}he \"{u}ber den Eingansgr\"{o}\ss{}en $x_1$ (Shear Force) und
 $x_2$ (Normal Force) aufgetragen (blau\,$=$\,kleine Werte, rot\,$=$\,gro\ss{}e Werte).}
 \label{fig:training_data}
@@ -264,7 +264,7 @@ $x_2$ (Normal Force) aufgetragen (blau\,$=$\,kleine Werte, rot\,$=$\,gro\ss{}e W
 
 Der Datensatz weist eine glatte, nichtlineare Abh\"{a}ngigkeit der Zielgr\"{o}\ss{}e von beiden
 Eingansgr\"{o}\ss{}en auf und eignet sich damit gut f\"{u}r den Methodenvergleich. Die Daten wurden
-im LMNTool als CSV-Datei importiert (Spaltenreihenfolge: $y$, $x_1$, $x_2$) und f\"{u}r alle
+im L2ML-Fitting-Tool als CSV-Datei importiert (Spaltenreihenfolge: $y$, $x_1$, $x_2$) und f\"{u}r alle
 f\"{u}nf Verfahren auf identischer Basis verwendet.
 
 % ============================================================
@@ -296,7 +296,7 @@ in den Trainingsdaten auswendig (\emph{Overfitting}) \cite{hastie2009}.
 \section{G\"{u}tekriterien}
 \label{sec:guetekriterien}
 
-Zur Bewertung der Modellg\"{u}te werden im LMNTool die folgenden standardisierten Ma\ss{}e
+Zur Bewertung der Modellg\"{u}te werden im L2ML-Fitting-Tool die folgenden standardisierten Ma\ss{}e
 verwendet \cite{hastie2009,bishop2006}:
 
 \subsection{Mittlerer quadratischer Fehler (MSE)}
@@ -370,7 +370,7 @@ auf dem verbleibenden Fold:
 \mathrm{CV}_k = \frac{1}{k}\sum_{j=1}^{k} \mathrm{Fehler}_j
 \end{equation}
 
-Typisch sind $k=5$ oder $k=10$. Das LMNTool unterst\"{u}tzt $k$-fache Kreuzvalidierung zur
+Typisch sind $k=5$ oder $k=10$. Das L2ML-Fitting-Tool unterst\"{u}tzt $k$-fache Kreuzvalidierung zur
 Hyperparameterauswahl. scikit-learn stellt hierf\"{u}r die Klasse \texttt{KFold} sowie
 \texttt{cross\_val\_score} bereit \cite{sklearn_cross_validation}.
 
@@ -413,7 +413,7 @@ Eingangsvariablen. Eine Standardisierung
 \tilde{x}_j = \frac{x_j - \mu_j}{\sigma_j}
 \end{equation}
 mit Mittelwert $\mu_j$ und Standardabweichung $\sigma_j$ der $j$-ten Eingangsdimension ist
-in der Praxis empfehlenswert. Das LMNTool normiert die Daten intern vor der \"{U}bergabe an die
+in der Praxis empfehlenswert. Das L2ML-Fitting-Tool normiert die Daten intern vor der \"{U}bergabe an die
 sklearn-Sch\"{a}tzer.
 
 % ============================================================
@@ -588,13 +588,13 @@ Die MATLAB LMNTool-Toolbox \cite{matlab_lmnhelp} bietet:
 \item Visualisierungen der G\"{u}ltigkeitsfunktionen und Partitionierungskarten.
 \end{itemize}
 
-Das Python-Tool \emph{LMNTool Multi GUI} orientiert sich an dieser Schnittstelle.
+Das Python-Tool \emph{L2ML-Fitting-Tool} orientiert sich an dieser Schnittstelle.
 
 \section{Hyperparameter von LOLIMOT}
 
 \begin{table}[H]
 \centering
-\caption{Wichtige Hyperparameter von LOLIMOT im LMNTool}
+\caption{Wichtige Hyperparameter von LOLIMOT im L2ML-Fitting-Tool}
 \label{tab:lolimot_params}
 \begin{tabular}{p{4.5cm}p{2cm}p{7cm}}
 \toprule
@@ -774,7 +774,7 @@ Beschreibung diagonaler Strukturen als achsenparallele Schnitte.}
 
 \begin{table}[H]
 \centering
-\caption{Wichtige Hyperparameter von HILOMOT im LMNTool}
+\caption{Wichtige Hyperparameter von HILOMOT im L2ML-Fitting-Tool}
 \label{tab:hilomot_params}
 \begin{tabular}{p{4.5cm}p{2cm}p{7cm}}
 \toprule
@@ -820,7 +820,7 @@ vorw\"{a}rtsgerichteten neuronalen Netzes. Die theoretischen Grundlagen gehen au
 Backpropagation-Algorithmus durch Rumelhart, Hinton und Williams (1986)
 \cite{rumelhart1986, goodfellow2016, haykin2009}.
 
-Im LMNTool wird \texttt{MLPRegressor} aus scikit-learn verwendet \cite{sklearn_mlp, pedregosa2011}.
+Im L2ML-Fitting-Tool wird \texttt{MLPRegressor} aus scikit-learn verwendet \cite{sklearn_mlp, pedregosa2011}.
 MATLAB stellt \"{a}quivalente Funktionalit\"{a}t \"{u}ber die Neural Network Toolbox und
 \texttt{fitrnet} (Statistics and Machine Learning Toolbox) bereit \cite{matlab_neural}.
 
@@ -928,7 +928,7 @@ Oberfl\"{a}che ist weicher und weniger strukturiert als bei HILOMOT/LOLIMOT.}
 
 \begin{table}[H]
 \centering
-\caption{Wichtige Hyperparameter des MLP im LMNTool (\texttt{MLPRegressor})}
+\caption{Wichtige Hyperparameter des MLP im L2ML-Fitting-Tool (\texttt{MLPRegressor})}
 \label{tab:mlp_params}
 \begin{tabular}{p{4.5cm}p{2cm}p{7cm}}
 \toprule
@@ -975,7 +975,7 @@ Regression als \emph{Support Vector Regression} (SVR) adaptiert
 f\"{u}r mittlere Datens\"{a}tze.
 
 MATLAB bietet SVR \"{u}ber \texttt{fitrsvm} im Statistics and Machine Learning Toolbox
-\cite{matlab_svr}. Im LMNTool wird scikit-learn's \texttt{SVR} eingesetzt
+\cite{matlab_svr}. Im L2ML-Fitting-Tool wird scikit-learn's \texttt{SVR} eingesetzt
 \cite{sklearn_svr, pedregosa2011}.
 
 \section{Das $\varepsilon$-insensitive Verlustprinzip}
@@ -1063,7 +1063,7 @@ mation komplexer Nichtlinearit\"{a}ten bei gleichzeitig kontrollierter Komplexit
 
 \begin{table}[H]
 \centering
-\caption{Wichtige Hyperparameter der SVR im LMNTool}
+\caption{Wichtige Hyperparameter der SVR im L2ML-Fitting-Tool}
 \label{tab:svr_params}
 \begin{tabular}{p{3cm}p{2cm}p{8.5cm}}
 \toprule
@@ -1106,7 +1106,7 @@ probabilistisches, nichtparametrisches Verfahren \cite{rasmussen2006}. Im Gegens
 HILOMOT/LOLIMOT, MLP und SVR gibt GPR eine \emph{vollst\"{a}ndige Wahrscheinlichkeitsverteilung}
 \"{u}ber m\"{o}gliche Funktionswerte aus, also neben der Punktvorhersage auch Unsicherheitsintervalle.
 
-MATLAB bietet GPR \"{u}ber \texttt{fitrgp} \cite{matlab_gpr}. Im LMNTool wird
+MATLAB bietet GPR \"{u}ber \texttt{fitrgp} \cite{matlab_gpr}. Im L2ML-Fitting-Tool wird
 scikit-learn's \texttt{GaussianProcessRegressor} verwendet \cite{sklearn_gpr, pedregosa2011}.
 
 \section{Grundkonzept: Verteilung \"{u}ber Funktionen}
@@ -1185,7 +1185,7 @@ Kernelparameter ($\ell$, $\sigma_f^2$, $\sigma_n^2$) werden durch Maximierung de
 -\frac{1}{2}\log\lvert K_y\rvert
 -\frac{N}{2}\log(2\pi)
 \end{equation}
-mit $K_y = K + \sigma_n^2 I$. Das LMNTool f\"{u}hrt \texttt{n\_restarts\_optimizer} Neustarts
+mit $K_y = K + \sigma_n^2 I$. Das L2ML-Fitting-Tool f\"{u}hrt \texttt{n\_restarts\_optimizer} Neustarts
 der L-BFGS-B-Optimierung durch.
 
 \section{Antwortfl\"{a}che}
@@ -1203,7 +1203,7 @@ das Modell in Richtung der Priorfunktion.}
 
 \begin{table}[H]
 \centering
-\caption{Wichtige Hyperparameter der GPR im LMNTool}
+\caption{Wichtige Hyperparameter der GPR im L2ML-Fitting-Tool}
 \label{tab:gpr_params}
 \begin{tabular}{p{4.5cm}p{2cm}p{7cm}}
 \toprule
@@ -1236,12 +1236,12 @@ Kernelparameter automatisch aus Daten gesch\"{a}tzt. & Numerische Instabilit\"{a
 \end{table}
 
 % ============================================================
-\chapter{LMNTool Multi GUI}
+\chapter{L2ML-Fitting-Tool}
 % ============================================================
 
 \section{\"{U}berblick und Architektur}
 
-LMNTool Multi GUI ist ein Python-basiertes Vergleichswerkzeug f\"{u}r f\"{u}nf Regressionsverfahren
+L2ML-Fitting-Tool ist ein Python-basiertes Vergleichswerkzeug f\"{u}r f\"{u}nf Regressionsverfahren
 auf einem einheitlichen Datensatz. Das Tool ist eine Portierung und Erweiterung der MATLAB
 LMNTool-Toolbox \cite{matlab_lmnhelp} und verwendet f\"{u}r HILOMOT/LOLIMOT eine
 Eigenimplementierung sowie f\"{u}r MLP, SVR und GPR scikit-learn \cite{pedregosa2011}.
@@ -1258,7 +1258,7 @@ CSV-Import mit Spaltenreihenfolge $y$, $x_1$, $x_2$. Nach dem Import:
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.65\textwidth]{training_data_3d.png}
-\caption{3D-Datenvorschau im LMNTool nach dem CSV-Import. Die Visualisierung erm\"{o}glicht
+\caption{3D-Datenvorschau im L2ML-Fitting-Tool nach dem CSV-Import. Die Visualisierung erm\"{o}glicht
 eine erste visuelle Plausibilit\"{a}tspr\"{u}fung -- z.\,B.\ auf Ausrei\ss{}er, L\"{u}cken oder
 unerwartete Strukturen.}
 \label{fig:data_preview_tool}
@@ -1272,7 +1272,7 @@ MSE, MAE, $R^2$ nach dem Training.
 
 \begin{table}[H]
 \centering
-\caption{Zusammenfassung der Kernparameter aller Methoden im LMNTool}
+\caption{Zusammenfassung der Kernparameter aller Methoden im L2ML-Fitting-Tool}
 \label{tab:all_params}
 \begin{tabular}{p{2.2cm}p{11cm}}
 \toprule
@@ -1311,7 +1311,7 @@ Interpretability Score.
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.68\textwidth]{correlation_plot.png}
-\caption{Korrelationsplot im LMNTool: gemessene Zielwerte $y$ vs.\ Modellvorhersage $\hat{y}$.
+\caption{Korrelationsplot im L2ML-Fitting-Tool: gemessene Zielwerte $y$ vs.\ Modellvorhersage $\hat{y}$.
 Gute Regression: Punkte nahe der Winkelhalbierenden. Systematische Abweichungen zeigen Modellbias.}
 \label{fig:correlation_plot}
 \end{figure}
@@ -1404,7 +1404,7 @@ Siegen auf \cite{matlab_lmnhelp, matlab_lmn} und kapselt deren Kernfunktionalit\
 \emph{App-Designer}-Anwendung mit einer einzigen, \"{u}bersichtlichen Fensteroberfl\"{a}che.
 
 \begin{merkbox}
-\textbf{Einordnung:} W\"{a}hrend das \emph{LMNTool Multi GUI} (Kapitel~9) ein
+\textbf{Einordnung:} W\"{a}hrend das \emph{L2ML-Fitting-Tool} (Kapitel~9) ein
 Python-basiertes Vergleichswerkzeug f\"{u}r f\"{u}nf Regressionsverfahren ist, fokussiert
 \emph{MeinWindowLMNTool} vollst\"{a}ndig auf HILOMOT und LOLIMOT im MATLAB-\"{O}kosystem.
 Es richtet sich prim\"{a}r an Anwender, die bereits mit MATLAB vertraut sind oder eine
@@ -1413,11 +1413,11 @@ enge Integration mit Simulink/Control-Toolboxen ben\"{o}tigen.
 
 \begin{table}[H]
 \centering
-\caption{Gegen\"{u}berstellung: MeinWindowLMNTool vs.\ LMNTool Multi GUI}
+\caption{Gegen\"{u}berstellung: MeinWindowLMNTool vs.\ L2ML-Fitting-Tool}
 \label{tab:tools_vergleich}
 \begin{tabular}{p{4.0cm}p{5.2cm}p{5.2cm}}
 \toprule
-\textbf{Merkmal} & \textbf{MeinWindowLMNTool} & \textbf{LMNTool Multi GUI} \\
+\textbf{Merkmal} & \textbf{MeinWindowLMNTool} & \textbf{L2ML-Fitting-Tool} \\
 \midrule
 Sprache / Plattform & MATLAB (App Designer) & Python (tkinter/matplotlib) \\
 Unterst\"{u}tzte Methoden & HILOMOT, LOLIMOT & HILOMOT, LOLIMOT, MLP, SVR, GPR \\
@@ -1478,7 +1478,7 @@ y  = data(:,1);   % Tilt Angle
 x1 = data(:,2);   % Shear Force
 x2 = data(:,3);   % Normal Force
 
-% Datenmenge X fuer LMNTool
+% Datenmenge X fuer L2ML-Fitting-Tool
 X_train = [x1, x2];
 \end{lstlisting}
 
@@ -1648,7 +1648,7 @@ y_hat = lmntool_predict(model, x_new);
 fprintf('Vorhergesagter Tilt Angle: %.4f\n', y_hat);
 \end{lstlisting}
 
-\section{Vergleich mit dem Python LMNTool Multi GUI}
+\section{Vergleich mit dem Python L2ML-Fitting-Tool}
 \label{sec:meinwindow_vergleich_python}
 
 Beide Werkzeuge erg\"{a}nzen sich sinnvoll und richten sich an unterschiedliche Anwendergruppen:
@@ -1659,7 +1659,7 @@ Beide Werkzeuge erg\"{a}nzen sich sinnvoll und richten sich an unterschiedliche 
     gew\"{u}nscht ist. St\"{a}rken: Validity-Function-Visualisierung, Simulink-Export,
     native MATLAB-Datenstrukturen.
 
-\item[LMNTool Multi GUI (Python):] Ideal f\"{u}r plattform\"{u}bergreifenden Einsatz und
+\item[L2ML-Fitting-Tool (Python):] Ideal f\"{u}r plattform\"{u}bergreifenden Einsatz und
     wenn auch MLP, SVR und GPR verglichen werden sollen. St\"{a}rken: Mehr Methoden,
     normierter Mehrkriterienscore, kostenlos nutzbar.
 \end{description}
@@ -1670,7 +1670,7 @@ Beide Werkzeuge erg\"{a}nzen sich sinnvoll und richten sich an unterschiedliche 
 \label{tab:tools_funktionen}
 \begin{tabular}{p{6.0cm}p{3.2cm}p{3.2cm}}
 \toprule
-\textbf{Funktion} & \textbf{MeinWindowLMNTool} & \textbf{LMNTool Multi GUI} \\
+\textbf{Funktion} & \textbf{MeinWindowLMNTool} & \textbf{L2ML-Fitting-Tool} \\
 \midrule
 HILOMOT-Training & \checkmark & \checkmark \\
 LOLIMOT-Training & \checkmark & \checkmark \\
@@ -1694,7 +1694,7 @@ MATLAB-Lizenz erforderlich & Ja & Nein \\
 \begin{merkbox}
 F\"{u}r reine HILOMOT/LOLIMOT-Anwendungen in MATLAB-Umgebungen ist \emph{MeinWindowLMNTool}
 die direktere Wahl. F\"{u}r einen \"{u}bergreifenden Methodenvergleich (inkl.\ MLP, SVR, GPR)
-bietet das \emph{LMNTool Multi GUI} den vollst\"{a}ndigeren Rahmen.
+bietet das \emph{L2ML-Fitting-Tool} den vollst\"{a}ndigeren Rahmen.
 \end{merkbox}
 
 % ============================================================
@@ -1888,7 +1888,7 @@ Das Verhalten au\ss{}erhalb des Trainingsbereichs (Extrapolation):
 \section{Wichtigste Erkenntnisse}
 
 Diese Dokumentation hat f\"{u}nf Regressionsverfahren von den mathematischen Grundlagen bis zur
-Implementierung im LMNTool Multi GUI ausf\"{u}hrlich beschrieben. Die zentralen Erkenntnisse:
+Implementierung im L2ML-Fitting-Tool ausf\"{u}hrlich beschrieben. Die zentralen Erkenntnisse:
 
 \begin{enumerate}
 \item \textbf{Lokale Modellnetze (HILOMOT, LOLIMOT)} bieten eine einzigartige Kombination aus
@@ -1906,7 +1906,7 @@ Implementierung im LMNTool Multi GUI ausf\"{u}hrlich beschrieben. Die zentralen 
       Vorteil f\"{u}r sicherheitskritische Anwendungen. Die kubische Skalierung limitiert den
       Einsatz bei gro\ss{}en Datens\"{a}tzen.
 
-\item \textbf{Das LMNTool Multi GUI} erm\"{o}glicht einen direkten, reproduzierbaren Vergleich
+\item \textbf{Das L2ML-Fitting-Tool} erm\"{o}glicht einen direkten, reproduzierbaren Vergleich
       aller f\"{u}nf Methoden mit einheitlichen Metriken, Multi-Kriterien-Bewertung und
       interaktiven Visualisierungen.
 \end{enumerate}
