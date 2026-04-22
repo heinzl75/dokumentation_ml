@@ -608,15 +608,26 @@ Das Python-Tool \emph{LMNTool Multi GUI} orientiert sich an dieser Schnittstelle
 \end{tabular}
 \end{table}
 
-\section{Antwortfl\"{a}che (LOLIMOT)}
+\section{Antwortfl\"{a}che und Partitionierungskarte (LOLIMOT)}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.68\textwidth]{surface_lolimot.png}
-\caption{Modellierte Antwortfl\"{a}che (LOLIMOT). Im Vergleich zu HILOMOT k\"{o}nnen achsenparallele
-Splits bei schr\"{a}g orientierten Strukturen leicht h\"{o}here Stufenm\"{a}\ss{}igkeit erzeugen.
-Die G\"{u}ltigkeitsfunktionen gew\"{a}hrleisten aber immer eine global glatte Fl\"{a}che.}
-\label{fig:surface_lolimot}
+\begin{subfigure}[b]{0.48\textwidth}
+  \includegraphics[width=\textwidth]{surface_lolimot.png}
+  \caption{Antwortfl\"{a}che (LOLIMOT)}
+  \label{fig:surface_lolimot}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+  \includegraphics[width=\textwidth]{partition_lolimot.png}
+  \caption{Partitionierungskarte (achsenparallel)}
+  \label{fig:partition_lolimot}
+\end{subfigure}
+\caption{LOLIMOT: Links die 3D-Vorhersagefl\"{a}che, rechts die Partitionierungskarte.
+Die achsenparallelen Trennlinien sind f\"{u}r LOLIMOT charakteristisch -- bei diagonal
+orientierten Datenstrukturen entstehen typische Treppenstufen-M\"{u}ster, die mehr
+Bl\"{a}tter erfordern als oblique Splits.}
+\label{fig:lolimot_combined}
 \end{figure}
 
 \section{St\"{a}rken und Schw\"{a}chen von LOLIMOT}
@@ -748,9 +759,9 @@ Zu gro\ss{}e Werte: Nur sehr nahe Datenpunkte -- Risiko schlecht konditionierter
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
-  \includegraphics[width=\textwidth]{partition_map.png}
+  \includegraphics[width=\textwidth]{partition_hilomot.png}
   \caption{Partitionierungskarte (oblique)}
-  \label{fig:partition_map}
+  \label{fig:partition_hilomot}
 \end{subfigure}
 \caption{HILOMOT: Links die 3D-Vorhersagefl\"{a}che, rechts die Partitionierungskarte. Jede Farbe
 entspricht einem dominanten lokalen Modell; die Linien zeigen die Trennhyperebenen. Oblique
@@ -1812,7 +1823,7 @@ Datenstruktur hindeutet. Dennoch lassen sich methodenspezifische Unterschiede be
 
 \begin{description}
 \item[HILOMOT und LOLIMOT] bilden die Struktur durch explizite Partitionierung ab. Die
-    Partitionierungskarte (Abb.~\ref{fig:partition_map}) zeigt klar, welche Teilmodelle
+    Partitionierungskarte (Abb.~\ref{fig:partition_hilomot}) zeigt klar, welche Teilmodelle
     dominieren. Bei HILOMOT sind schr\"{a}ge Trennlinien erkennbar, die auf nicht-achsenparallele
     Datenstruktur hinweisen. LOLIMOT ben\"{o}tigt f\"{u}r \"{a}hnliche Genauigkeit typischerweise
     mehr Bl\"{a}tter.
