@@ -110,7 +110,7 @@
   {\Large Methode, Vergleich und Tool-Dokumentation}\[1.5em]
   {\large Eine Lernunterlage f\"ur Hochschule und Praxis}\[3em]
   \rule{0.6\textwidth}{0.4pt}\[1.5em]
-  {\normalsize Python-Portierung der MATLAB LMNTool-Toolbox (v1.5.2.1)}\[0.5em]
+  {\normalsize Python-Implementierung mit scikit-learn-kompatibler Schnittstelle}\[0.5em]
   {\normalsize Stand: April 2026}\[3em]
   \vfill
   {\small \textit{Hierarchical Local Model Tree -- Lokale Modellnetze mit obliquen Trennhyperebenen}}
@@ -136,7 +136,7 @@ Stell dir eine Landkarte vor. Statt die gesamte Erdoberfl"ache mit einer einzige
 
 Im Gegensatz zum Vorg"anger \textbf{LOLIMOT} verwendet HILOMOT \textbf{oblique} (schr"age) Trennhyperebenen, die nicht auf die Koordinatenachsen beschr"ankt sind. Damit kann das Modell auch diagonale und nichtachsenparallele Strukturen in den Daten effizient erfassen.
 
-Dieses Python-Tool ist eine Portierung der MATLAB LMNTool-Toolbox (Version 1.5.2.1) und stellt sowohl eine interaktive GUI als auch eine skriptbasierte Schnittstelle bereit.
+Dieses Python-Tool implementiert den HILOMOT-Algorithmus mit einer scikit-learn-kompatiblen Schnittstelle (\texttt{fit}/\texttt{predict}/\texttt{score}) und stellt sowohl eine interaktive GUI als auch eine skriptbasierte Schnittstelle bereit. Weitere verwendete Python-Bibliotheken sind \texttt{numpy}, \texttt{scipy} und \texttt{matplotlib}.
 
 \begin{figure}[H]
   \centering
@@ -672,7 +672,7 @@ Kernklasse des Algorithmus.
   \texttt{\_estimate\_split\_kappa(...)} & Sch"atzt $\kappa$ f"ur einen Kandidaten-Split \\
   \texttt{\_adjust\_kappa(...)} & Passt $\kappa$ basierend auf \texttt{demanded\_membership\_value} an \\
   \texttt{to\_dict()} / \texttt{from\_dict()} & Serialisierung als Python-Dictionary \\
-  \texttt{save\_mat()} / \texttt{from\_mat()} & Speichern/Laden im MATLAB \texttt{.mat}-Format \\
+  \texttt{save\_mat()} / \texttt{from\_mat()} & Speichern/Laden im \texttt{.mat}-Format (via \texttt{scipy.io}) \\
   \bottomrule
 \end{tabular}
 \end{center}
@@ -865,8 +865,8 @@ oblique = True                             # HILOMOT (True) oder LOLIMOT (False)
 
   \item \textbf{Hartmann, B., Nelles, O.} (2009). \textit{Hierarchical Local Model Trees for Design of Experiments in the Framework of Global Model Networks}. Proc. 15th IFAC Symposium on System Identification.
 
-  \item \textbf{LMNTool MATLAB Toolbox v1.5.2.1} -- Universit"at Siegen, Lehrstuhl f"ur Regelungs- und Systemtechnik.\\
-    Referenzimplementierung, auf der diese Python-Portierung basiert.
+  \item \textbf{Pedregosa, F. et al.} (2011). \textit{Scikit-learn: Machine Learning in Python}. Journal of Machine Learning Research, 12, 2825--2830.\\
+    Grundlegende Python-Bibliothek f"ur maschinelles Lernen; die HILOMOT-Implementierung folgt deren Estimator-Schnittstelle.
 \end{enumerate}
 
 \end{document}

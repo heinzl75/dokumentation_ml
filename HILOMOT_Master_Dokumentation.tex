@@ -130,7 +130,7 @@
 	
 	Im Gegensatz zum Vorgänger \textbf{LOLIMOT} verwendet HILOMOT \textbf{oblique} (schräge) Trennhyperebenen, die nicht auf die Koordinatenachsen beschränkt sind. Damit kann das Modell auch diagonale und nichtachsenparallele Strukturen in den Daten effizient erfassen.
 	
-	Dieses Python-Tool ist eine Portierung der MATLAB LMNTool-Toolbox (Version 1.5.2.1) und stellt sowohl eine interaktive GUI als auch eine skriptbasierte Schnittstelle bereit.
+	Dieses Python-Tool implementiert den HILOMOT-Algorithmus mit einer scikit-learn-kompatiblen Schnittstelle (\texttt{fit}/\texttt{predict}/\texttt{score}) und stellt sowohl eine interaktive GUI als auch eine skriptbasierte Schnittstelle bereit. Weitere verwendete Python-Bibliotheken sind \texttt{numpy}, \texttt{scipy} und \texttt{matplotlib}.
 	
 	\begin{figure}[H]
 		\centering
@@ -666,7 +666,7 @@
 			\texttt{\_estimate\_split\_kappa(...)} & Schätzt $\kappa$ für einen Kandidaten-Split \\
 			\texttt{\_adjust\_kappa(...)} & Passt $\kappa$ basierend auf \texttt{demanded\_membership\_value} an \\
 			\texttt{to\_dict()} / \texttt{from\_dict()} & Serialisierung als Python-Dictionary \\
-			\texttt{save\_mat()} / \texttt{from\_mat()} & Speichern/Laden im MATLAB \texttt{.mat}-Format \\
+			\texttt{save\_mat()} / \texttt{from\_mat()} & Speichern/Laden im \texttt{.mat}-Format (via \texttt{scipy.io}) \\
 			\bottomrule
 		\end{tabular}
 	\end{center}
@@ -859,8 +859,8 @@
 		
 		\item \textbf{Hartmann, B., Nelles, O.} (2009). \textit{Hierarchical Local Model Trees for Design of Experiments in the Framework of Global Model Networks}. Proc. 15th IFAC Symposium on System Identification.
 		
-		\item \textbf{LMNTool MATLAB Toolbox v1.5.2.1} -- Universität Siegen, Lehrstuhl für Regelungs- und Systemtechnik.\\
-		Referenzimplementierung, auf der diese Python-Portierung basiert.
+		\item \textbf{Pedregosa, F. et al.} (2011). \textit{Scikit-learn: Machine Learning in Python}. Journal of Machine Learning Research, 12, 2825--2830.\\
+		Grundlegende Python-Bibliothek für maschinelles Lernen; die HILOMOT-Implementierung folgt deren Estimator-Schnittstelle.
 	\end{enumerate}
 	
 \end{document}
